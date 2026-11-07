@@ -39,6 +39,25 @@ export const AuthProvider = ({ children }) => {
     fetchCurrentUser();
   }, [fetchCurrentUser]);
 
+  const getApiError = (err, fallback) => {
+    if (err.response) {
+      if (typeof err.response.data === 'object' && err.response.data?.message) {
+        return err.response.data.message;
+      }
+      if (err.response.status === 404) {
+        return 'Backend API service is not reachable (404 Not Found). The backend service may still be deploying on Render.';
+      }
+      if (err.response.status >= 500) {
+        return `Backend server error (${err.response.status}). Please check database connectivity.`;
+      }
+      return `Request failed with HTTP status ${err.response.status}.`;
+    }
+    if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+      return 'Network Error: Cannot connect to backend server. Render service may be waking from cold sleep.';
+    }
+    return fallback || err.message || 'An unexpected authentication error occurred.';
+  };
+
   const login = async (email, password) => {
     try {
       const response = await api.post('/auth/login', { email, password });
@@ -52,7 +71,7 @@ export const AuthProvider = ({ children }) => {
       }
       return { success: false, message: response.data.message };
     } catch (err) {
-      const msg = err.response?.data?.message || 'Invalid email or password.';
+      const msg = getApiError(err, 'Invalid email or password.');
       toast.error(msg);
       return { success: false, message: msg };
     }
@@ -71,7 +90,7 @@ export const AuthProvider = ({ children }) => {
       }
       return { success: false, message: response.data.message };
     } catch (err) {
-      const msg = err.response?.data?.message || 'Registration failed. Please check your details.';
+      const msg = getApiError(err, 'Registration failed. Please check your details.');
       toast.error(msg);
       return { success: false, message: msg };
     }
