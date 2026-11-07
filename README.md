@@ -1,56 +1,71 @@
 # CampusHire – Smart Placement & Recruitment Management Platform
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Node Version](https://img.shields.io/badge/Node.js-v18+-green.svg)](https://nodejs.org)
-[![React Version](https://img.shields.io/badge/React-18-blue.svg)](https://react.dev)
-[![MySQL Version](https://img.shields.io/badge/MySQL-8.0+-orange.svg)](https://www.mysql.com)
-[![Vite](https://img.shields.io/badge/Bundler-Vite-purple.svg)](https://vitejs.dev)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC.svg)](https://tailwindcss.com)
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/kvsatyanarayana949/campushire)
+[![Live Frontend](https://img.shields.io/badge/Live_App-campushire--mu.vercel.app-blue?style=flat-square&logo=vercel)](https://campushire-mu.vercel.app)
+[![Live Backend API](https://img.shields.io/badge/Live_API-campushire--satya--backend.onrender.com-46E3B7?style=flat-square&logo=render)](https://campushire-satya-backend.onrender.com/api/health)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-campushire-181717?style=flat-square&logo=github)](https://github.com/kvsatyanarayana949/campushire)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Node Version](https://img.shields.io/badge/Node.js-v18+-green.svg?style=flat-square&logo=node.js)](https://nodejs.org)
+[![React Version](https://img.shields.io/badge/React-18-blue.svg?style=flat-square&logo=react)](https://react.dev)
+[![MySQL Version](https://img.shields.io/badge/MySQL-8.0+-orange.svg?style=flat-square&logo=mysql)](https://www.mysql.com)
+[![Test Suite](https://img.shields.io/badge/Tests-52%20Passed%20(100%25)-success?style=flat-square)](https://github.com/kvsatyanarayana949/campushire)
 
 CampusHire is a production-grade, full-stack campus recruitment and placement automation SaaS platform. It bridges university candidates, corporate recruiters, and institutional placement cell administrators through automated backend academic eligibility validation, real-time application pipelines, interview scheduling, and placement analytics.
 
 ---
 
+## 🌐 Live Deployments & Endpoints
+
+| Component | Provider | Live URL | Status |
+|---|---|---|---|
+| **Web Client (SPA)** | Vercel Hobby | [https://campushire-mu.vercel.app](https://campushire-mu.vercel.app) | `200 OK` |
+| **REST API Server** | Render Free Web Service | [https://campushire-satya-backend.onrender.com](https://campushire-satya-backend.onrender.com) | `200 OK` |
+| **Health Check** | Render | [https://campushire-satya-backend.onrender.com/api/health](https://campushire-satya-backend.onrender.com/api/health) | `{"status":"UP"}` |
+| **Jobs Catalog API** | Render | [https://campushire-satya-backend.onrender.com/api/jobs](https://campushire-satya-backend.onrender.com/api/jobs) | `200 OK` |
+| **Cloud Database** | TiDB Cloud Serverless | Distributed MySQL 8.0 compatible | Connected (SSL) |
+
+---
+
 ## Table of Contents
 
-1. [Key Features](#key-features)
-2. [Technology Stack](#technology-stack)
-3. [System Architecture](#system-architecture)
-4. [Database Design](#database-design)
-5. [Eligibility Engine (Core Business Logic)](#eligibility-engine-core-business-logic)
-6. [API Documentation](#api-documentation)
-7. [Installation & Local Setup](#installation--local-setup)
-8. [Environment Configuration](#environment-configuration)
-9. [Automated Testing Suite](#automated-testing-suite)
-10. [Demo Accounts](#demo-accounts)
-11. [Free Deployment Guide](#free-deployment-guide)
-12. [Fresher Interview Technical Walkthrough](#fresher-interview-technical-walkthrough)
+1. [Key Features](#1-key-features)
+2. [Technology Stack](#2-technology-stack)
+3. [System Architecture](#3-system-architecture)
+4. [Database Design & Schema](#4-database-design--schema)
+5. [Eligibility Engine (Core Business Logic)](#5-eligibility-engine-core-business-logic)
+6. [Security & Production Engineering](#6-security--production-engineering)
+7. [API Documentation](#7-api-documentation)
+8. [Installation & Local Setup](#8-installation--local-setup)
+9. [Environment Configuration](#9-environment-configuration)
+10. [Automated Testing Suite (52 Tests)](#10-automated-testing-suite-52-tests)
+11. [Demo Credentials](#11-demo-credentials)
+12. [Zero-Cost Cloud Deployment Guide](#12-zero-cost-cloud-deployment-guide)
+13. [Fresher & SDE Technical Interview Walkthrough](#13-fresher--sde-technical-interview-walkthrough)
 
 ---
 
 ## 1. Key Features
 
 ### For Students
-- **Candidate Onboarding & Profile**: Academic record tracking including verified CGPA, department, roll number, active backlogs count, graduation year, and resume link.
-- **Technical Skills Matrix**: Tag programming languages and frameworks with proficiency levels (`BEGINNER`, `INTERMEDIATE`, `ADVANCED`).
-- **Real-Time Eligibility Checker**: Instantly evaluate qualifications against job postings with an itemized breakdown of CGPA comparison, backlogs check, and missing technical skills.
-- **Duplicate Application Prevention**: Both frontend validation and MySQL database-level unique constraints ensure students cannot apply more than once to any drive.
+- **Candidate Onboarding & Academic Profile**: Academic record tracking including verified CGPA, department, roll number, active backlogs count, graduation batch, and resume URL.
+- **Technical Skills Matrix**: Tag programming languages, frameworks, and databases with proficiency levels (`BEGINNER`, `INTERMEDIATE`, `ADVANCED`).
+- **Real-Time Eligibility Checker**: Instantly evaluate qualifications against job postings with an itemized breakdown comparing CGPA, backlogs, and missing skills.
+- **Duplicate Application Prevention**: Dual-layer protection (frontend validation and database-level unique constraints) ensuring students cannot apply more than once to any drive.
 - **Application Pipeline Tracking**: Track application lifecycle across 5 stages (`APPLIED` → `UNDER_REVIEW` → `SHORTLISTED` → `SELECTED` / `REJECTED`).
-- **Application Withdrawal**: Withdraw active submissions prior to recruiter review.
-- **Interview Notifications**: Receive instant notification alerts with interview schedules and video meeting links.
+- **Application Withdrawal**: Safe withdrawal of active submissions prior to recruiter review.
+- **Interview Notifications**: Instant alerts with interview schedules and video meeting links.
 
 ### For Corporate Recruiters
 - **Company Recruitment Workspace**: Manage company branding, headquarters, industry, and description.
 - **Configurable Campus Drives**: Publish job openings with custom academic eligibility thresholds (minimum CGPA, active backlog cap, eligible graduation batch, degrees, and departments).
 - **Candidate Pipeline Review**: Filter applicants by status, review student academic transcripts and technical skills, and access resume documents.
 - **Status Transitions & Interview Scheduling**: Advance candidates across recruitment stages, set interview dates, and attach meeting URLs.
-- **Students Talent Directory**: Search and explore candidate pools across the university.
+- **Student Talent Directory**: Search and explore candidate pools across the university.
 
 ### For Placement Administrators
 - **Placement Analytics Console**: Interactive charts powered by Recharts visualizing department-wise enrolled vs. placed students and application status distribution.
 - **Institutional Oversight**: Monitor all corporate drives, candidate applications, and offer acceptance velocity.
 - **User Management**: Search, audit, and toggle active/inactive account status with safety locks against self-deactivation.
+- **Credential & Session Management**: Secure admin password rotation with pessimistic row locking and atomic session invalidation.
 
 ---
 
@@ -61,7 +76,7 @@ CampusHire is a production-grade, full-stack campus recruitment and placement au
 - **Language**: JavaScript (ES6+)
 - **Routing**: React Router DOM v7
 - **Styling**: Tailwind CSS
-- **HTTP Client**: Axios with automatic JWT interceptors
+- **HTTP Client**: Axios with automatic JWT request interceptors
 - **Icons**: Lucide React
 - **Data Visualization**: Recharts (Responsive bar and distribution charts)
 - **Global State**: React Context API (`AuthContext`, `ToastContext`)
@@ -70,13 +85,14 @@ CampusHire is a production-grade, full-stack campus recruitment and placement au
 - **Runtime**: Node.js (v18+)
 - **Framework**: Express.js
 - **Architecture**: Modular Controller-Service-Repository REST API
-- **Authentication**: Stateless JSON Web Tokens (JWT)
+- **Authentication**: Stateless JSON Web Tokens (JWT) with database-backed `token_version` session revocation
 - **Password Hashing**: bcryptjs (10 salt rounds)
+- **Concurrency Control**: MySQL pessimistic row locking (`SELECT ... FOR UPDATE`)
 - **Request Validation**: express-validator middleware
-- **Security**: Helmet security headers, CORS origin whitelisting, express-rate-limit brute force protection
+- **Security**: Helmet security headers, strict CORS origin whitelisting, express-rate-limit brute force protection
 
 ### Database
-- **Engine**: MySQL 8.0+
+- **Engine**: MySQL 8.0+ / TiDB Cloud Serverless (Distributed MySQL 8.0 Wire-Compatible)
 - **Driver**: mysql2 with Promise API and connection pooling
 - **Integrity**: Parameterized SQL queries, foreign key cascading constraints, unique compound indexes, and ACID transactions for multi-table updates.
 
@@ -85,43 +101,51 @@ CampusHire is a production-grade, full-stack campus recruitment and placement au
 ## 3. System Architecture
 
 ```
-CampusHire Platform
+CampusHire Platform Architecture
 │
-├── client/ (React + Vite SPA)
+├── client/ (React 18 + Vite SPA on Vercel)
 │   ├── src/
-│   │   ├── api/             # Axios instance & JWT interceptors
-│   │   ├── context/         # AuthContext & ToastContext
-│   │   ├── components/      # Reusable UI system (Badge, Modal, Skeletons, etc.)
-│   │   ├── layouts/         # MainLayout (Public) & DashboardLayout (Auth)
+│   │   ├── api/             # Axios instance & JWT request interceptors
+│   │   ├── context/         # AuthContext (session state) & ToastContext
+│   │   ├── components/      # Reusable UI primitives (Badge, Modal, Skeletons)
+│   │   ├── layouts/         # MainLayout (Public) & DashboardLayout (Protected)
 │   │   └── pages/
-│   │       ├── public/      # Landing, Jobs, Details, Login, Registration
-│   │       ├── student/     # Dashboard, Profile, Applications, Alerts
-│   │       ├── recruiter/   # Dashboard, Post Job, Manage Jobs, Pipeline
-│   │       └── admin/       # Analytics, User Management, Global Audit
+│   │       ├── public/      # Landing, Jobs Catalog, Job Details, Login, Register
+│   │       ├── student/     # Student Dashboard, Profile, Applications, Alerts
+│   │       ├── recruiter/   # Recruiter Dashboard, Post Job, Pipeline Manager
+│   │       └── admin/       # Placement Analytics, User Management, Audit Logs
 │
-├── server/ (Node.js + Express.js REST API)
-│   ├── database/            # schema.sql, seed.sql, init.js
+├── server/ (Node.js + Express REST API on Render)
+│   ├── database/
+│   │   ├── schema.sql       # Authoritative 3NF relational schema
+│   │   ├── seed.sql         # Realistic demo seed dataset
+│   │   └── init.js          # Idempotent, race-safe migration engine
 │   ├── src/
-│   │   ├── config/          # MySQL connection pool (mysql2/promise)
+│   │   ├── config/          # Centralized JWT config (jwt.js) & MySQL pool (db.js)
 │   │   ├── controllers/     # auth, student, recruiter, company, job, app, admin
-│   │   ├── middleware/      # auth (JWT), roles (RBAC), validate, errorHandler
+│   │   ├── middleware/      # auth (JWT + token_version), roles (RBAC), errorHandler
 │   │   ├── routes/          # Express route routers
 │   │   ├── services/        # eligibilityService (Core Evaluation Engine)
 │   │   ├── utils/           # Standardized API response formatters
 │   │   ├── validators/      # express-validator schemas
-│   │   ├── app.js           # Express application configuration
+│   │   ├── app.js           # Express app configuration & fail-fast checks
 │   │   └── server.js        # HTTP server entrypoint
-│   └── tests/               # Automated integration test suite (14 passing tests)
+│   └── tests/               # 52 automated tests with isolation guard
+│       ├── testGuard.js     # Production DB safety barrier
+│       ├── jwtConfig.test.js
+│       ├── migration.test.js
+│       ├── passwordSecurity.test.js
+│       └── api.test.js
 ```
 
 ---
 
-## 4. Database Design
+## 4. Database Design & Schema
 
 Normalized 3NF relational schema with 9 primary tables:
 
-1. **`users`**: Identity table storing name, email (unique index), bcrypt password hash, role (`STUDENT`, `RECRUITER`, `ADMIN`), and account active flag.
-2. **`companies`**: Organization details created by recruiters or administrators.
+1. **`users`**: Identity table storing name, email (unique index), bcrypt password hash, role (`STUDENT`, `RECRUITER`, `ADMIN`), account active flag, and `token_version` (INT NOT NULL DEFAULT 0).
+2. **`companies`**: Organization profiles created by recruiters or administrators.
 3. **`student_profiles`**: 1-to-1 relationship with `users` (`user_id` FK). Holds roll number, degree, department, CGPA, active backlogs, graduation year, phone, and resume URL.
 4. **`student_skills`**: Many-to-1 with `student_profiles`. Stores skill names and proficiency (`BEGINNER`, `INTERMEDIATE`, `ADVANCED`) with composite unique constraint `(student_id, skill_name)`.
 5. **`recruiter_profiles`**: 1-to-1 with `users`. Associates recruiter with their `companies` organization and designation.
@@ -138,19 +162,61 @@ Located in `server/src/services/eligibilityService.js`, the eligibility engine p
 
 $$\text{isEligible} = (\text{CGPA} \ge \text{min\_cgpa}) \land (\text{Backlogs} \le \text{max\_backlogs}) \land (\text{GradYear Match}) \land (\text{Degree Match}) \land (\text{Skills Match})$$
 
-### Checks performed:
-1. **CGPA Threshold**: Compares student CGPA against job's minimum requirement.
+### Checks Performed:
+1. **CGPA Threshold**: Compares student CGPA against job's minimum cutoff.
 2. **Backlog Cap**: Verifies student active backlogs does not exceed job's maximum limit.
 3. **Graduation Batch**: If specified, checks student's graduation year.
 4. **Degree & Department Alignment**: Checks if student's degree/department matches approved list or `All Departments`.
 5. **Technical Skills Matching**: Compares student's skills against job's required skills. Identifies matched skills and missing skills.
-6. **Ineligibility Reasons**: Returns an array of human-readable reasons for ineligibility, preventing invalid submissions before writing to database.
+6. **Zero-Trust Backend Verification**: The submission handler `POST /api/applications` re-evaluates all criteria server-side against authoritative database records before accepting submissions.
 
 ---
 
-## 6. API Documentation
+## 6. Security & Production Engineering
 
-All API responses follow a uniform JSON schema:
+### 1. Database-Backed `token_version` Session Revocation
+- Every user row in the database maintains an integer `token_version` column (default `0`).
+- Every issued JWT embeds `tokenVersion: user.token_version`.
+- The authentication middleware (`server/src/middleware/auth.js`) checks:
+  ```javascript
+  if (user.token_version !== decoded.tokenVersion) {
+    return res.status(401).json({ success: false, message: 'Session revoked. Please log in again.' });
+  }
+  ```
+- When an administrator rotates their password, the database updates the password hash and atomically increments `token_version` in a single transaction. All previously issued tokens are immediately rejected across all devices without requiring stateful Redis clusters.
+
+### 2. Pessimistic Concurrency Control
+- In `server/src/controllers/adminController.js`, password changes acquire a pessimistic row-level write lock:
+  ```sql
+  SELECT id, password_hash, token_version FROM users WHERE id = ? FOR UPDATE;
+  ```
+- The subsequent update uses optimistic locking verification:
+  ```sql
+  UPDATE users SET password_hash = ?, token_version = token_version + 1 WHERE id = ? AND token_version = ?;
+  ```
+- This prevents two concurrent requests from verifying the same old password and causing race condition overwrites.
+
+### 3. Idempotent & Race-Safe Migration Engine
+- `server/database/init.js` features `verifyAndMigrateTokenVersion` to safely handle multi-instance container startups:
+  1. Queries `information_schema.columns` to check if `token_version` exists.
+  2. If missing, attempts `ALTER TABLE users ADD COLUMN token_version INT NOT NULL DEFAULT 0`.
+  3. If another backend container runs `ALTER TABLE` concurrently, the error is caught and the schema is re-verified.
+  4. Enforces strict type validation using `/^int(\(\d+\))?$/` and signedness checks (rejecting unsigned types or missing defaults).
+  5. Any unrecoverable database or migration error halts startup immediately with a non-zero exit code (`process.exit(1)`).
+
+### 4. Fail-Fast Centralized JWT Secret Enforcement
+- Centralized in `server/src/config/jwt.js` through `getJwtSecret()`.
+- Stripped all hardcoded fallback keys. If `JWT_SECRET` is missing, undefined, or empty, the backend fails fast at boot time before accepting any HTTP requests.
+
+### 5. Automated Database Isolation Guard
+- `server/tests/testGuard.js` inspects database connection targets before any test suite executes.
+- If `DB_HOST` points to TiDB Cloud, AWS, Render, or any remote IP, test execution aborts immediately to protect production data integrity.
+
+---
+
+## 7. API Documentation
+
+All API responses follow a uniform JSON envelope:
 
 ```json
 {
@@ -192,21 +258,22 @@ All API responses follow a uniform JSON schema:
 | `GET` | `/api/admin/dashboard` | Admin | Comprehensive placement metrics and chart data |
 | `GET` | `/api/admin/users` | Admin | Paginated user accounts list |
 | `PATCH` | `/api/admin/users/:id/toggle-status` | Admin | Activate or deactivate user credentials |
+| `POST` | `/api/admin/change-password` | Admin | Rotate admin credentials with row locking & session revocation |
 | `GET` | `/api/admin/jobs` | Admin | Institutional job openings audit |
 | `GET` | `/api/admin/applications` | Admin | Global applications tracking pool |
 
 ---
 
-## 7. Installation & Local Setup
+## 8. Installation & Local Setup
 
 ### Prerequisites
 - Node.js (v18.0.0 or higher)
 - npm (v9.0.0 or higher)
-- MySQL Server 8.0+ running locally or cloud MySQL instance
+- MySQL Server 8.0+ running locally (or cloud MySQL instance)
 
 ### Step 1: Clone Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/kvsatyanarayana949/campushire.git
 cd campushire
 ```
 
@@ -214,156 +281,184 @@ cd campushire
 ```bash
 npm run install:all
 ```
-*(Installs both server and client dependencies)*
+*(Installs dependencies across root, server, and client)*
 
-### Step 3: Configure Environment Variables
-Copy the `.env.example` templates to `.env`:
+### Step 3: Configure Local Environment
+Create `server/.env` and `client/.env` files (refer to Section 9 below).
 
-**Server (`server/.env`)**:
+### Step 4: Initialize Local Database
+```bash
+npm run db:init
+```
+*(Executes `schema.sql`, applies migrations, and seeds realistic demo data)*
+
+### Step 5: Start Development Servers
+```bash
+# Terminal 1: Backend API (port 5000)
+npm run server
+
+# Terminal 2: Frontend Client (port 5173)
+npm run client
+```
+
+---
+
+## 9. Environment Configuration
+
+### Server (`server/.env`)
 ```env
 PORT=5000
 NODE_ENV=development
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_USER=root
-DB_PASSWORD=your_mysql_password
+DB_PASSWORD=your_local_password
 DB_NAME=campushire_db
-JWT_SECRET=campushire_super_secret_jwt_key_2026_dev_mode
+JWT_SECRET=your_secure_development_jwt_secret_min_32_characters
 JWT_EXPIRES_IN=7d
 CORS_ORIGIN=http://localhost:5173
 ```
 
-**Client (`client/.env`)**:
+### Client (`client/.env`)
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
-### Step 4: Initialize MySQL Database & Seed Data
-```bash
-npm run db:init
-```
-*(Executes `schema.sql` and populates realistic demo records with companies, students, jobs, and applications)*
+---
 
-### Step 5: Start Development Servers
-In two separate terminal windows:
+## 10. Automated Testing Suite (52 Tests)
 
-**Terminal 1 (Backend API)**:
-```bash
-npm run server
-```
-*Backend runs at `http://localhost:5000` (Health check: `http://localhost:5000/api/health`)*
+CampusHire includes 5 comprehensive automated test suites covering integration, security, migration concurrency, and isolation:
 
-**Terminal 2 (Frontend Client)**:
 ```bash
-npm run client
+npm --prefix server test
 ```
-*Frontend runs at `http://localhost:5173`*
+
+### Test Suite Summary:
+```
+▶ CampusHire Full-Stack Backend Integration Tests (14 tests)
+  ✔ 1. Health check endpoint responds with 200 OK
+  ✔ 2. Student Login with demo credentials returns JWT and student profile
+  ✔ 3. Recruiter Login returns JWT and company information
+  ✔ 4. Admin Login returns JWT and admin role privileges
+  ✔ 5. Student cannot access Admin dashboard (RBAC Enforcement)
+  ✔ 6. Admin can fetch comprehensive placement analytics dashboard
+  ✔ 7. Jobs listing returns paginated active openings
+  ✔ 8. Recruiter can post a new verified job opening
+  ✔ 9. Eligibility Engine accurately verifies eligible student
+  ✔ 10. Eligible student applies for the newly created job
+  ✔ 11. Duplicate application prevention: student cannot apply twice for same job
+  ✔ 12. Ineligible student is rejected by backend eligibility engine
+  ✔ 13. Recruiter views applicants and updates application status to SHORTLISTED
+  ✔ 14. Student receives real-time notification on application status change
+
+▶ JWT Configuration & Secret Enforcement Suite (8 tests)
+  ✔ 1. Missing JWT_SECRET: startup/configuration fails with clear fatal error
+  ✔ 2. Empty or whitespace JWT_SECRET: startup/configuration fails with clear fatal error
+  ✔ 3. Valid JWT_SECRET: configuration succeeds and returns trimmed secret
+  ✔ 4. Signing and verification use the same configured secret
+  ✔ 5. A token signed using a different secret is rejected (invalid signature)
+  ✔ 6. No hardcoded fallback remains anywhere in the backend source code
+  ✔ 7. Secret value is never leaked in exception messages
+  ✔ Cleanup: Restore environment
+
+▶ Database Migration & Concurrency Suite (Isolated Local Tables) (8 tests)
+  ✔ 1. Column already exists with correct definition (INT NOT NULL DEFAULT 0)
+  ✔ 2. Column is missing and gets created successfully with valid definition
+  ✔ 3. Concurrent migration race: Instance A creates column, Instance B fails ALTER TABLE but recovers via schema recheck
+  ✔ 4. ALTER TABLE fails and column remains missing: startup fails (throws FATAL error)
+  ✔ 5. Column exists with an incorrect definition: startup fails (throws FATAL error)
+  ✔ 6. Schema recheck itself fails: startup fails (throws FATAL error)
+  ✔ 7. Column exists with incorrect signedness (INT UNSIGNED): startup fails (throws FATAL error)
+  ✔ 8. Genuine two-connection migration race: two real connections attempt migration simultaneously and both succeed
+
+▶ Admin Password Change & Database-Backed Token Version Security Suite (17 tests)
+  ✔ 1. Unauthenticated request to /api/admin/change-password is rejected (401)
+  ✔ 2. Student role cannot access /api/admin/change-password (403 RBAC)
+  ✔ 3. Recruiter role cannot access /api/admin/change-password (403 RBAC)
+  ✔ 4. Test admin logs in: token contains tokenVersion = 0 and no password hash
+  ✔ 5. Validation error: Missing required fields rejected (422)
+  ✔ 6. Validation error: Weak password rejected (422)
+  ✔ 7. Validation error: New password identical to current password rejected (422)
+  ✔ 8. Failed password change does NOT increment token_version or alter stored password hash
+  ✔ 9. Successful password change increments token_version to 1 and returns fresh JWT (200)
+  ✔ 10. JWT Session Revocation: Old JWT token (version 0) is immediately rejected (401)
+  ✔ 11. Legacy token without tokenVersion claim is also rejected (401)
+  ✔ 12. Newly issued JWT token (version 1) is valid and accesses protected admin routes (200)
+  ✔ 13. Login with old password fails (401)
+  ✔ 14. Login with new password succeeds and returns token with tokenVersion = 1 (200)
+  ✔ 15. Student & Recruiter authorization behavior remains completely unchanged
+  ✔ 16. Route canonicalization: redundant /api/auth/change-password does not exist (404)
+  ✔ 17. Concurrent password-change protection: only one concurrent request succeeds and token_version increments exactly once
+
+▶ Test Environment Isolation Guard Suite (5 tests)
+  ✔ 1. Passes when connected to local loopback (127.0.0.1:3306)
+  ✔ 2. Throws fatal safety violation when DB_HOST contains tidbcloud
+  ✔ 3. Throws fatal safety violation when DB_PORT is 4000
+  ✔ 4. Throws fatal safety violation when DB_HOST is an external IP or remote server
+  ✔ Cleanup: Restore test environment
+
+ℹ tests 52 | pass 52 | fail 0 | cancelled 0 | skipped 0
+```
 
 ---
 
-## 8. Automated Testing Suite
+## 11. Demo Credentials
 
-CampusHire includes an automated integration test suite verifying end-to-end functionality across authentication, RBAC authorization, job creation, eligibility evaluation, duplicate prevention, and status workflows.
+Pre-seeded accounts for evaluation on the [Live Web Application](https://campushire-mu.vercel.app):
 
-Run tests:
-```bash
-npm test
-```
-
-### Test Suite Results:
-```
-✔ 1. Health check endpoint responds with 200 OK
-✔ 2. Student Login with demo credentials returns JWT and student profile
-✔ 3. Recruiter Login returns JWT and company information
-✔ 4. Admin Login returns JWT and admin role privileges
-✔ 5. Student cannot access Admin dashboard (RBAC Enforcement)
-✔ 6. Admin can fetch comprehensive placement analytics dashboard
-✔ 7. Jobs listing returns paginated active openings
-✔ 8. Recruiter can post a new verified job opening
-✔ 9. Eligibility Engine accurately verifies eligible student
-✔ 10. Eligible student applies for the newly created job
-✔ 11. Duplicate application prevention: student cannot apply twice for same job
-✔ 12. Ineligible student is rejected by backend eligibility engine
-✔ 13. Recruiter views applicants and updates application status to SHORTLISTED
-✔ 14. Student receives real-time notification on application status change
-ℹ tests 14 | pass 14 | fail 0
-```
-
----
-
-## 9. Demo Accounts
-
-For instant review and evaluation, pre-seeded demonstration accounts are available with one-click autofill buttons on the login page:
-
-| Role | Name | Email | Password | Academic / Org Details |
+| Role | Name | Email | Password | Autofill on Login Page |
 |---|---|---|---|---|
-| **Student (Eligible)** | Rohit Verma | `rohit.verma@student.edu` | `Password@123` | CGPA: 8.75, 0 Backlogs, CSE (2026), React, Node, MySQL |
-| **Student (Intermediate)** | Ananya Sen | `ananya.sen@student.edu` | `Password@123` | CGPA: 7.40, 1 Backlog, IT (2026), Tailwind, React |
-| **Student (Ineligible Edge Case)** | Vikram Singh | `vikram.singh@student.edu` | `Password@123` | CGPA: 6.10, 2 Backlogs, Mech (2025) - Tests eligibility rejection |
-| **Recruiter** | Priya Sharma | `priya.sharma@nexuscloud.com` | `Password@123` | NexusCloud Technologies, Campus Talent Head |
-| **Recruiter** | Arjun Mehta | `arjun.mehta@fintechlabs.io` | `Password@123` | Apex FinTech Labs, Senior Engineering Recruitment |
-| **Administrator** | System Admin | `admin@campushire.io` | `Password@123` | Institutional Placement Cell Director |
+| **Student (Eligible)** | Rohit Verma | `rohit.verma@student.edu` | `Password@123` | ✅ 1-Click Button |
+| **Recruiter** | Priya Sharma | `priya.sharma@nexuscloud.com` | `Password@123` | ✅ 1-Click Button |
+| **Administrator** | System Admin | `admin@campushire.io` | `Password@123` | 🔒 Manual Entry (Least-Privilege Security) |
+
+> **Security Note**: The administrator account requires manual credential entry by design. Hardcoded admin autofill credentials have been intentionally excised from the production frontend bundle to adhere to production security standards.
 
 ---
 
-## 10. Free Deployment Guide
+## 12. Zero-Cost Cloud Deployment Guide
 
-CampusHire is engineered for zero-cost deployment across modern cloud platforms:
+CampusHire is engineered for 100% free-tier cloud hosting:
 
-### 1. Database (Free MySQL)
-- **Option A**: [TiDB Cloud Serverless](https://tidbcloud.com) (5GB free MySQL-compatible database, always free).
-- **Option B**: [Aiven for MySQL](https://aiven.io) (Free tier managed MySQL).
-- **Option C**: [Railway](https://railway.app) (Free trial MySQL service).
-
-*After provisioning cloud MySQL, run `node database/init.js` with cloud `DB_HOST`, `DB_USER`, `DB_PASSWORD` to create the schema and demo seed.*
-
-### 2. Backend (Free Node.js Host)
-- **Platform**: [Render](https://render.com) (Free Web Service) or [Railway](https://railway.app).
-- **Root Directory**: `server`
-- **Build Command**: `npm install`
-- **Start Command**: `npm start`
-- **Environment Variables**:
-  - `PORT=5000`
-  - `NODE_ENV=production`
-  - `DB_HOST=<cloud-mysql-host>`
-  - `DB_PORT=3306`
-  - `DB_USER=<cloud-mysql-user>`
-  - `DB_PASSWORD=<cloud-mysql-password>`
-  - `DB_NAME=campushire_db`
-  - `JWT_SECRET=<random-64-char-string>`
-  - `CORS_ORIGIN=https://<your-frontend>.vercel.app`
-
-### 3. Frontend (Free Static Host - Vercel)
-- **Platform**: [Vercel](https://vercel.com)
-- **Framework Preset**: Vite
-- **Root Directory**: `client`
-- **Build Command**: `npm run build`
-- **Output Directory**: `dist`
-- **Environment Variables**:
-  - `VITE_API_URL=https://<your-backend>.onrender.com/api`
+1. **Database: TiDB Cloud Serverless (Free Forever)**
+   - 5GB free storage, auto-scaling compute, full MySQL 8.0 wire compatibility, TLS/SSL encryption.
+2. **Backend: Render Free Web Service**
+   - Free Node.js web service. Automatic deployment on push to `main`.
+   - Start command: `node database/init.js && npm start` (runs idempotent migrations automatically).
+3. **Frontend: Vercel Hobby (Free Forever)**
+   - Vite React SPA static deployment with global edge CDN distribution and auto HTTPS.
 
 ---
 
-## 11. Fresher Interview Technical Walkthrough
+## 13. Fresher & SDE Technical Interview Walkthrough
 
-### 1. What problem does CampusHire solve?
-In traditional university placement drives, placement cells manually track hundreds of student resumes in spreadsheets. Ineligible candidates often apply to companies with strict CGPA or backlog cutoffs, creating administrative overhead and recruiter frustration. CampusHire solves this by automating eligibility verification on the backend, tracking real-time status transitions, and providing placement analytics.
+### 1. How does CampusHire implement instant session revocation with stateless JWTs?
+Standard JWTs are self-contained and stateless, meaning once issued, a token remains valid until it expires even if the user's password is changed or compromised. CampusHire solves this with a lightweight **database-backed `token_version`**:
+- Each user record holds an integer `token_version` (starting at 0).
+- When a JWT is signed, `tokenVersion` is embedded into the payload.
+- Authentication middleware retrieves the user's current `token_version` from the database and asserts `tokenVersion === user.token_version`.
+- When an admin rotates their password, the database updates the password hash and increments `token_version` in one atomic operation.
+- Instantly, all previously issued tokens are rejected with HTTP 401 across all browsers and devices without needing an expensive, stateful Redis cache cluster.
 
-### 2. How is security handled?
-- Passwords are never stored in plain text; they are hashed with `bcryptjs` using 10 salt rounds.
-- Authentication uses stateless JWT tokens verified by custom middleware on protected routes.
-- Role-based authorization (`authorize('STUDENT')`, `authorize('RECRUITER')`, `authorize('ADMIN')`) guarantees students cannot view or modify administrative records or other students' private data.
-- SQL injection is eliminated using parameterized queries (`?` placeholders) with `mysql2`.
-- `helmet` configures HTTP security headers and `cors` restricts frontend origins.
-- Rate limiting protects authentication routes against brute-force attacks.
+### 2. How do you protect against race conditions during concurrent password updates?
+CampusHire implements two complementary concurrency controls:
+1. **Pessimistic Row Locking**: Uses `SELECT id, password_hash, token_version FROM users WHERE id = ? FOR UPDATE` inside an ACID transaction. If two requests arrive simultaneously, the second transaction is queued until the first completes.
+2. **Optimistic Version Verification**: The update statement executes `UPDATE users SET password_hash = ?, token_version = token_version + 1 WHERE id = ? AND token_version = ?`. If the version has already changed, the query matches 0 rows, triggering an immediate transaction rollback.
 
-### 3. How does the backend prevent duplicate applications?
-Duplicate application prevention is enforced at two distinct architectural levels:
-1. **Application Logic**: The `POST /api/applications` controller queries existing records before running the evaluation.
-2. **Database Integrity**: The `applications` table enforces a composite unique constraint: `UNIQUE KEY uq_job_student (job_id, student_id)`. Even under concurrent race conditions, MySQL rejects duplicates with an `ER_DUP_ENTRY` error code, which our centralized error middleware catches and translates to a clean 409 Conflict response.
+### 3. How does the automated migration handle multi-instance race conditions?
+When deploying multiple container instances horizontally, all instances boot up simultaneously and run `node database/init.js`.
+- If two instances execute `ALTER TABLE users ADD COLUMN token_version...` at the same time, MySQL gives a `Duplicate column name` error to the second instance.
+- Rather than crashing, the migration engine catches this error, inspects `information_schema.columns`, and checks if the column now exists with the exact definition (`INT NOT NULL DEFAULT 0`).
+- If confirmed, it logs that another instance completed the migration and startup continues successfully. If the column does not exist or has an invalid type, it halts startup with `process.exit(1)`.
 
-### 4. What happens if a student modifies the frontend to apply for an ineligible job?
-CampusHire strictly adheres to zero-trust principles. The frontend eligibility check is merely a user experience convenience. When the submission reaches `POST /api/applications`, the backend queries the student's authoritative database profile and recalculates all requirements (CGPA cutoff, active backlogs, graduation year, degree, and required skills matching). If the student is ineligible, the backend aborts the transaction and returns a `403 Forbidden` with the exact unmet criteria.
+### 4. How does CampusHire prevent duplicate applications?
+Enforced at two distinct architectural layers:
+1. **Application Logic**: The controller queries existing submissions for `(job_id, student_id)` before evaluating eligibility.
+2. **Database Integrity**: The `applications` table enforces a composite unique key: `UNIQUE KEY uq_job_student (job_id, student_id)`. Under high-concurrency race conditions, MySQL rejects duplicates with error code `ER_DUP_ENTRY`, which the centralized error middleware intercepts and translates to a clean `409 Conflict`.
+
+### 5. Why is the backend eligibility engine zero-trust?
+Frontend checks can be bypassed by intercepting or scripting HTTP requests. CampusHire treats all frontend data as untrusted. When `POST /api/applications` receives a request, it ignores client assertions and queries authoritative student records from MySQL, evaluating CGPA cutoffs, active backlogs, graduation year, degree, and required technical skills. If any requirement fails, the submission is rejected with `403 Forbidden` and an itemized breakdown of unmet criteria.
 
 ---
 
