@@ -1,12 +1,14 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
+const { getJwtSecret, getJwtExpiresIn } = require('../config/jwt');
 const { successResponse, errorResponse } = require('../utils/response');
 
-const generateToken = (userId, role) => {
-  const secret = process.env.JWT_SECRET || 'campushire_secret_jwt_key';
-  const expiresIn = process.env.JWT_EXPIRES_IN || '7d';
-  return jwt.sign({ userId, role }, secret, { expiresIn });
+const generateToken = (userId, role, tokenVersion = 0) => {
+  const secret = getJwtSecret();
+  const expiresIn = getJwtExpiresIn();
+  const version = typeof tokenVersion === 'number' ? tokenVersion : (parseInt(tokenVersion, 10) || 0);
+  return jwt.sign({ userId, role, tokenVersion: version }, secret, { expiresIn });
 };
 
 // POST /api/auth/register
@@ -157,7 +159,7 @@ const register = async (req, res, next) => {
     await connection.commit();
     connection.release();
 
-    const token = generateToken(userId, role);
+    const token = generateToken(userId, role, 0);
 
     return successResponse(
       res,
@@ -187,7 +189,7 @@ const login = async (req, res, next) => {
     const { email, password } = req.body;
 
     const [users] = await pool.query(
-      'SELECT id, name, email, password, role, is_active FROM users WHERE email = ? LIMIT 1',
+      'SELECT id, name, email, password, role, token_version, is_active FROM users WHERE email = ? LIMIT 1',
       [email]
     );
 
@@ -236,7 +238,8 @@ const login = async (req, res, next) => {
       }
     }
 
-    const token = generateToken(user.id, user.role);
+    const tokenVersion = user.token_version !== undefined && user.token_version !== null ? Number(user.token_version) : 0;
+    const token = generateToken(user.id, user.role, tokenVersion);
 
     return successResponse(
       res,
@@ -315,5 +318,6 @@ const getMe = async (req, res, next) => {
 module.exports = {
   register,
   login,
-  getMe
+  getMe,
+  generateToken
 };

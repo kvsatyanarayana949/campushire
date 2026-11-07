@@ -2,12 +2,14 @@ const { test, describe, before, after } = require('node:test');
 const assert = require('node:assert');
 const app = require('../src/app');
 const pool = require('../src/config/db');
+const { assertTestDatabaseSafety } = require('./testGuard');
 
 let server;
 let baseUrl;
 const PORT = 5055;
 
 before(async () => {
+  assertTestDatabaseSafety();
   await new Promise((resolve) => {
     server = app.listen(PORT, () => {
       baseUrl = `http://localhost:${PORT}`;

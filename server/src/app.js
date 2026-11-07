@@ -5,6 +5,10 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+const { getJwtSecret } = require('./config/jwt');
+
+// Enforce required security configuration on startup: fail fast if JWT_SECRET is missing
+getJwtSecret();
 
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 

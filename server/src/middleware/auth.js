@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
+const { getJwtSecret } = require('../config/jwt');
 const { errorResponse } = require('../utils/response');
 
 const authenticate = async (req, res, next) => {
@@ -10,7 +11,7 @@ const authenticate = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const secret = process.env.JWT_SECRET || 'campushire_secret_jwt_key';
+    const secret = getJwtSecret();
 
     let decoded;
     try {
@@ -24,7 +25,7 @@ const authenticate = async (req, res, next) => {
 
     // Verify user exists and is active in database
     const [users] = await pool.query(
-      'SELECT id, name, email, role, is_active FROM users WHERE id = ? LIMIT 1',
+      'SELECT id, name, email, role, token_version, is_active FROM users WHERE id = ? LIMIT 1',
       [decoded.userId]
     );
 
@@ -35,6 +36,14 @@ const authenticate = async (req, res, next) => {
     const user = users[0];
     if (!user.is_active) {
       return errorResponse(res, 'Your account has been deactivated. Please contact administrator.', 403);
+    }
+
+    // Validate token_version: reject tokens without version claim or with mismatched version
+    const dbTokenVersion = user.token_version !== undefined && user.token_version !== null ? Number(user.token_version) : 0;
+    const jwtTokenVersion = decoded.tokenVersion !== undefined && decoded.tokenVersion !== null ? Number(decoded.tokenVersion) : null;
+
+    if (jwtTokenVersion === null || jwtTokenVersion !== dbTokenVersion) {
+      return errorResponse(res, 'Session invalidated due to password change. Please log in with your new password.', 401);
     }
 
     req.user = user;

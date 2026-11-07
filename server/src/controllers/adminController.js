@@ -1,4 +1,6 @@
+const bcrypt = require('bcryptjs');
 const pool = require('../config/db');
+const { generateToken } = require('./authController');
 const { successResponse, errorResponse, paginatedResponse } = require('../utils/response');
 
 // GET /api/admin/dashboard
@@ -271,10 +273,83 @@ const listAllApplications = async (req, res, next) => {
   }
 };
 
+// POST /api/admin/change-password
+const changeAdminPassword = async (req, res, next) => {
+  let connection;
+  try {
+    const { currentPassword, newPassword } = req.body;
+    // Derive ID exclusively from the authenticated JWT token — never accept an ID from the request body or query
+    const adminUserId = req.user.id;
+
+    connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    // 1. Exclusive row-level lock (FOR UPDATE) to prevent concurrent race conditions
+    const [users] = await connection.query(
+      'SELECT id, password, role, token_version FROM users WHERE id = ? AND role = ? FOR UPDATE',
+      [adminUserId, 'ADMIN']
+    );
+
+    if (users.length === 0) {
+      await connection.rollback();
+      return errorResponse(res, 'Administrator account not found.', 404);
+    }
+
+    const admin = users[0];
+
+    // 2. Verify current password using bcrypt against the locked, up-to-date row
+    const isMatch = await bcrypt.compare(currentPassword, admin.password);
+    if (!isMatch) {
+      await connection.rollback();
+      return errorResponse(res, 'Current password is incorrect.', 400);
+    }
+
+    // 3. Hash the new password using bcrypt (10 rounds)
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    const currentVersion = admin.token_version !== undefined && admin.token_version !== null ? Number(admin.token_version) : 0;
+    const newTokenVersion = currentVersion + 1;
+
+    // 4. Update password and increment token_version guarded by current version
+    const [updateResult] = await connection.query(
+      'UPDATE users SET password = ?, token_version = ?, updated_at = NOW() WHERE id = ? AND role = ? AND token_version = ?',
+      [hashedPassword, newTokenVersion, adminUserId, 'ADMIN', currentVersion]
+    );
+
+    if (updateResult.affectedRows === 0) {
+      await connection.rollback();
+      return errorResponse(res, 'Concurrent modification detected. Please try again.', 409);
+    }
+
+    // 5. Commit transaction atomically
+    await connection.commit();
+
+    // 6. Generate fresh JWT token with the committed token_version
+    const token = generateToken(adminUserId, 'ADMIN', newTokenVersion);
+
+    return successResponse(
+      res,
+      { token },
+      'Administrator password updated successfully.'
+    );
+  } catch (err) {
+    if (connection) {
+      try { await connection.rollback(); } catch (_) {}
+    }
+    next(err);
+  } finally {
+    if (connection) {
+      connection.release();
+    }
+  }
+};
+
 module.exports = {
   getDashboardMetrics,
   listUsers,
   toggleUserStatus,
   listAllJobs,
-  listAllApplications
+  listAllApplications,
+  changeAdminPassword
 };
