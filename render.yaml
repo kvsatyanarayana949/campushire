@@ -3,7 +3,7 @@ services:
     name: campushire-satya-backend
     runtime: node
     plan: free
-    region: oregon
+    region: singapore
     rootDir: server
     buildCommand: npm install
     startCommand: node database/init.js && npm start

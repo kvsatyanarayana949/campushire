@@ -2,6 +2,10 @@ const mysql = require('mysql2/promise');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
+const useSSL = process.env.DB_SSL === 'true' || 
+               process.env.DB_PORT === '4000' || 
+               (process.env.DB_HOST && process.env.DB_HOST.includes('tidbcloud'));
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST || '127.0.0.1',
   port: parseInt(process.env.DB_PORT || '3306', 10),
@@ -15,7 +19,7 @@ const pool = mysql.createPool({
   keepAliveInitialDelay: 0,
   timezone: '+00:00',
   dateStrings: true,
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
+  ssl: useSSL ? { minVersion: 'TLSv1.2', rejectUnauthorized: false } : undefined
 });
 
 // Test connection on boot

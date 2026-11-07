@@ -10,8 +10,12 @@ async function runInit() {
   const user = process.env.DB_USER || 'root';
   const password = process.env.DB_PASSWORD || '';
   const database = process.env.DB_NAME || 'campushire_db';
+  const useSSL = process.env.DB_SSL === 'true' || 
+                 process.env.DB_PORT === '4000' || 
+                 (process.env.DB_HOST && process.env.DB_HOST.includes('tidbcloud'));
+  const sslConfig = useSSL ? { minVersion: 'TLSv1.2', rejectUnauthorized: false } : undefined;
 
-  console.log(`Connecting to MySQL at ${host}:${port} as ${user}...`);
+  console.log(`Connecting to MySQL at ${host}:${port} as ${user}... (TLS: ${useSSL ? 'Enabled' : 'Disabled'})`);
 
   let rootConn;
   try {
@@ -21,7 +25,7 @@ async function runInit() {
       user,
       password,
       multipleStatements: true,
-      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
+      ssl: sslConfig
     });
     console.log('Connected to MySQL server.');
 
@@ -43,7 +47,7 @@ async function runInit() {
       password,
       database,
       multipleStatements: true,
-      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
+      ssl: sslConfig
     });
 
     const schemaPath = path.join(__dirname, 'schema.sql');
