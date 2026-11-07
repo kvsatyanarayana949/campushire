@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: campushire-api
+    name: campushire-satya-backend
     runtime: node
     plan: free
     region: oregon
@@ -29,4 +29,4 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-        sync: false
+        value: https://campushire-mu.vercel.app
