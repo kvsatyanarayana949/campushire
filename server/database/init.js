@@ -20,7 +20,8 @@ async function runInit() {
       port,
       user,
       password,
-      multipleStatements: true
+      multipleStatements: true,
+      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
     });
     console.log('Connected to MySQL server.');
 
@@ -41,7 +42,8 @@ async function runInit() {
       user,
       password,
       database,
-      multipleStatements: true
+      multipleStatements: true,
+      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
     });
 
     const schemaPath = path.join(__dirname, 'schema.sql');

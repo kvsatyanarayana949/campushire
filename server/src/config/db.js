@@ -14,7 +14,8 @@ const pool = mysql.createPool({
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
   timezone: '+00:00',
-  dateStrings: true
+  dateStrings: true,
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
 });
 
 // Test connection on boot
