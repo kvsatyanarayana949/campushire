@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard,
@@ -16,36 +16,68 @@ import {
 
 const Sidebar = ({ unreadNotifications = 0, isOpen = true, onClose = () => {} }) => {
   const { user, logout, isStudent, isRecruiter } = useAuth();
+  const location = useLocation();
 
   const studentLinks = [
-    { label: 'Overview', to: '/student', icon: LayoutDashboard },
-    { label: 'Verified Jobs', to: '/jobs', icon: Briefcase },
-    { label: 'My Applications', to: '/student/applications', icon: FileText },
-    { label: 'Profile & Skills', to: '/student/profile', icon: User },
+    { label: 'Overview', to: '/student', icon: LayoutDashboard, end: true },
+    { label: 'Verified Jobs', to: '/jobs', icon: Briefcase, end: false },
+    { label: 'My Applications', to: '/student/applications', icon: FileText, end: true },
+    { label: 'Profile & Skills', to: '/student/profile', icon: User, end: true },
     {
       label: 'Notifications',
       to: '/student/notifications',
       icon: Bell,
+      end: true,
       badge: unreadNotifications > 0 ? unreadNotifications : null,
     },
   ];
 
   const recruiterLinks = [
-    { label: 'Overview', to: '/recruiter', icon: LayoutDashboard },
-    { label: 'Publish Job', to: '/recruiter/jobs/new', icon: PlusCircle },
-    { label: 'Manage Jobs', to: '/recruiter/jobs', icon: Briefcase },
-    { label: 'Company Profile', to: '/recruiter/profile', icon: Building2 },
-    { label: 'Students Directory', to: '/recruiter/students', icon: Users },
+    { label: 'Overview', to: '/recruiter', icon: LayoutDashboard, end: true },
+    { label: 'Publish Job', to: '/recruiter/jobs/new', icon: PlusCircle, end: true },
+    { label: 'Manage Jobs', to: '/recruiter/jobs', icon: Briefcase, end: false },
+    { label: 'Company Profile', to: '/recruiter/profile', icon: Building2, end: true },
+    { label: 'Students Directory', to: '/recruiter/students', icon: Users, end: true },
   ];
 
   const adminLinks = [
-    { label: 'Placement Analytics', to: '/admin', icon: BarChart3 },
-    { label: 'User Directory', to: '/admin/users', icon: Users },
-    { label: 'All Job Postings', to: '/admin/jobs', icon: Briefcase },
-    { label: 'Applications Pool', to: '/admin/applications', icon: FileText },
+    { label: 'Placement Analytics', to: '/admin', icon: BarChart3, end: true },
+    { label: 'User Directory', to: '/admin/users', icon: Users, end: true },
+    { label: 'All Job Postings', to: '/admin/jobs', icon: Briefcase, end: true },
+    { label: 'Applications Pool', to: '/admin/applications', icon: FileText, end: true },
   ];
 
   const navLinks = isStudent ? studentLinks : isRecruiter ? recruiterLinks : adminLinks;
+
+  const isLinkActive = (to, end) => {
+    const currentPath = location.pathname;
+
+    // Direct exact match
+    if (currentPath === to) {
+      return true;
+    }
+
+    // Special isolation for recruiter job routes:
+    // "Publish Job" (/recruiter/jobs/new) must only be active on /recruiter/jobs/new
+    if (to === '/recruiter/jobs/new') {
+      return currentPath === '/recruiter/jobs/new';
+    }
+
+    // "Manage Jobs" (/recruiter/jobs) must NEVER match /recruiter/jobs/new
+    if (to === '/recruiter/jobs') {
+      if (currentPath === '/recruiter/jobs/new') {
+        return false;
+      }
+      return currentPath === '/recruiter/jobs' || currentPath.startsWith('/recruiter/jobs/');
+    }
+
+    // If explicit end matching requested (like root dashboards)
+    if (end) {
+      return currentPath === to;
+    }
+
+    return currentPath.startsWith(to + '/');
+  };
 
   return (
     <>
@@ -90,15 +122,17 @@ const Sidebar = ({ unreadNotifications = 0, isOpen = true, onClose = () => {} })
               <NavLink
                 key={item.to}
                 to={item.to}
-                end={item.to === '/student' || item.to === '/recruiter' || item.to === '/admin'}
+                end={item.end}
                 onClick={onClose}
-                className={({ isActive }) =>
-                  `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                    isActive
+                aria-current={isLinkActive(item.to, item.end) ? 'page' : undefined}
+                className={() => {
+                  const active = isLinkActive(item.to, item.end);
+                  return `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    active
                       ? 'bg-brand-600 text-white shadow-sm shadow-brand-600/30'
                       : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
-                  }`
-                }
+                  }`;
+                }}
               >
                 <div className="flex items-center space-x-3">
                   <Icon className="w-4 h-4 shrink-0" />
