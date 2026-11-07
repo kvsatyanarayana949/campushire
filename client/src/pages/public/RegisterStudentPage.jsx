@@ -312,7 +312,7 @@ const RegisterStudentPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center space-x-2 py-3.5 text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 disabled:bg-brand-400 rounded-xl shadow-md shadow-brand-600/20 transition mt-6"
+            className="w-full flex items-center justify-center space-x-2 py-3.5 text-sm font-bold text-white bg-sky-600 hover:bg-sky-700 active:bg-sky-800 disabled:bg-sky-400 rounded-xl shadow-md shadow-sky-600/25 transition-all mt-6"
           >
             <span>{loading ? 'Creating Student Profile...' : 'Complete Student Registration'}</span>
             <ArrowRight className="w-4 h-4" />

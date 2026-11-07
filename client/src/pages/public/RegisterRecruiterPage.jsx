@@ -212,7 +212,7 @@ const RegisterRecruiterPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center space-x-2 py-3.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 rounded-xl shadow-md shadow-indigo-600/20 transition mt-6"
+            className="w-full flex items-center justify-center space-x-2 py-3.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:bg-indigo-400 rounded-xl shadow-md shadow-indigo-600/25 transition-all mt-6"
           >
             <span>{loading ? 'Creating Hiring Hub...' : 'Complete Recruiter Registration'}</span>
             <ArrowRight className="w-4 h-4" />

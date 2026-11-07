@@ -184,25 +184,25 @@ const JobApplicantsPage = () => {
                 <div className="flex flex-wrap items-center gap-2 shrink-0">
                   <button
                     onClick={() => handleOpenStatusModal(app, 'UNDER_REVIEW')}
-                    className="px-3 py-1.5 text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-xl border border-amber-200 transition"
+                    className="px-3.5 py-1.5 text-xs font-bold text-amber-950 bg-amber-100 hover:bg-amber-200 active:bg-amber-300 rounded-xl border border-amber-300 shadow-2xs transition"
                   >
                     Under Review
                   </button>
                   <button
                     onClick={() => handleOpenStatusModal(app, 'SHORTLISTED')}
-                    className="px-3 py-1.5 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-xl border border-purple-200 transition"
+                    className="px-3.5 py-1.5 text-xs font-bold text-purple-950 bg-purple-100 hover:bg-purple-200 active:bg-purple-300 rounded-xl border border-purple-300 shadow-2xs transition"
                   >
                     Shortlist & Interview
                   </button>
                   <button
                     onClick={() => handleOpenStatusModal(app, 'SELECTED')}
-                    className="px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-xl border border-emerald-200 transition"
+                    className="px-3.5 py-1.5 text-xs font-bold text-emerald-950 bg-emerald-100 hover:bg-emerald-200 active:bg-emerald-300 rounded-xl border border-emerald-300 shadow-2xs transition"
                   >
                     Extend Offer
                   </button>
                   <button
                     onClick={() => handleOpenStatusModal(app, 'REJECTED')}
-                    className="px-3 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-xl border border-rose-200 transition"
+                    className="px-3.5 py-1.5 text-xs font-bold text-rose-950 bg-rose-100 hover:bg-rose-200 active:bg-rose-300 rounded-xl border border-rose-300 shadow-2xs transition"
                   >
                     Reject
                   </button>

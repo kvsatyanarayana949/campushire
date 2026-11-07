@@ -2,30 +2,32 @@ import React from 'react';
 
 const Badge = ({ variant = 'default', children, className = '' }) => {
   const variants = {
-    default: 'bg-slate-100 text-slate-800 border-slate-200',
-    primary: 'bg-brand-50 text-brand-700 border-brand-200',
-    success: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    warning: 'bg-amber-50 text-amber-700 border-amber-200',
-    danger: 'bg-rose-50 text-rose-700 border-rose-200',
-    purple: 'bg-purple-50 text-purple-700 border-purple-200',
+    default: 'bg-slate-100 text-slate-800 border-slate-300',
+    primary: 'bg-sky-100 text-sky-900 border-sky-300 font-semibold',
+    success: 'bg-emerald-100 text-emerald-900 border-emerald-300 font-semibold',
+    warning: 'bg-amber-100 text-amber-950 border-amber-300 font-semibold',
+    danger: 'bg-rose-100 text-rose-950 border-rose-300 font-semibold',
+    purple: 'bg-purple-100 text-purple-900 border-purple-300 font-semibold',
+    
     // Application statuses
-    APPLIED: 'bg-blue-50 text-blue-700 border-blue-200',
-    UNDER_REVIEW: 'bg-amber-50 text-amber-700 border-amber-200',
-    SHORTLISTED: 'bg-purple-50 text-purple-700 border-purple-200',
-    SELECTED: 'bg-emerald-50 text-emerald-700 border-emerald-200 font-semibold',
-    REJECTED: 'bg-rose-50 text-rose-700 border-rose-200',
+    APPLIED: 'bg-blue-100 text-blue-900 border-blue-300 font-semibold',
+    UNDER_REVIEW: 'bg-amber-100 text-amber-950 border-amber-300 font-semibold',
+    SHORTLISTED: 'bg-purple-100 text-purple-900 border-purple-300 font-semibold',
+    SELECTED: 'bg-emerald-100 text-emerald-950 border-emerald-300 font-semibold',
+    REJECTED: 'bg-rose-100 text-rose-950 border-rose-300 font-semibold',
+    
     // Job Types
-    FULL_TIME: 'bg-slate-900 text-slate-100 border-slate-800',
-    INTERNSHIP: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-    PART_TIME: 'bg-teal-50 text-teal-700 border-teal-200',
-    CONTRACT: 'bg-orange-50 text-orange-700 border-orange-200',
+    FULL_TIME: 'bg-slate-900 text-white border-slate-800 font-semibold',
+    INTERNSHIP: 'bg-indigo-100 text-indigo-950 border-indigo-300 font-semibold',
+    PART_TIME: 'bg-teal-100 text-teal-950 border-teal-300 font-semibold',
+    CONTRACT: 'bg-orange-100 text-orange-950 border-orange-300 font-semibold',
   };
 
   const selectedClass = variants[variant] || variants.default;
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${selectedClass} ${className}`}
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs border ${selectedClass} ${className}`}
     >
       {children}
     </span>

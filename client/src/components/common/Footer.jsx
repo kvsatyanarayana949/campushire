@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Briefcase, ShieldCheck, Heart } from 'lucide-react';
+import { Briefcase, ShieldCheck } from 'lucide-react';
 
 const Footer = () => {
   return (

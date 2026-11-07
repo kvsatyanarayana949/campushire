@@ -12,12 +12,10 @@ import {
   Building2,
   BarChart3,
   LogOut,
-  ShieldAlert,
-  ChevronRight,
 } from 'lucide-react';
 
 const Sidebar = ({ unreadNotifications = 0, isOpen = true, onClose = () => {} }) => {
-  const { user, logout, isStudent, isRecruiter, isAdmin } = useAuth();
+  const { user, logout, isStudent, isRecruiter } = useAuth();
 
   const studentLinks = [
     { label: 'Overview', to: '/student', icon: LayoutDashboard },

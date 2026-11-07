@@ -74,20 +74,20 @@ const LandingPage = () => {
               CampusHire unifies universities, students, and recruiters with an automated backend eligibility engine, real-time application pipelines, and placement transparency.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-3">
               <Link
                 to="/jobs"
-                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 text-base font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-xl shadow-lg shadow-brand-600/25 transition"
+                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-7 py-3.5 text-base font-bold text-white bg-sky-600 hover:bg-sky-700 active:bg-sky-800 rounded-xl shadow-md shadow-sky-600/30 transition-all hover:-translate-y-0.5"
               >
-                <Search className="w-4 h-4" />
-                <span>Explore Verified Openings</span>
+                <Search className="w-5 h-5 text-white" />
+                <span className="text-white font-bold">Explore Verified Openings</span>
               </Link>
               <Link
                 to="/register/recruiter"
-                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 text-base font-semibold text-slate-800 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl shadow-sm transition"
+                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-7 py-3.5 text-base font-bold text-slate-800 bg-white hover:bg-slate-100 hover:text-slate-900 border-2 border-slate-300 rounded-xl shadow-xs transition-all hover:-translate-y-0.5"
               >
-                <Building className="w-4 h-4 text-slate-500" />
-                <span>Post Campus Jobs</span>
+                <Building className="w-5 h-5 text-slate-700" />
+                <span className="text-slate-800 font-bold">Post Campus Jobs</span>
               </Link>
             </div>
 
@@ -179,25 +179,25 @@ const LandingPage = () => {
 
                 {/* Eligibility chips */}
                 <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
-                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-medium">
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 font-semibold border border-slate-300">
                     Min CGPA: {parseFloat(job.min_cgpa).toFixed(1)}
                   </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-medium">
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 font-semibold border border-slate-300">
                     Backlogs: ≤ {job.max_backlogs}
                   </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-medium border border-emerald-200">
+                  <span className="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-950 font-semibold border border-emerald-300">
                     {job.salary_range}
                   </span>
                 </div>
               </div>
 
-              <div className="pt-5 mt-5 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs text-slate-400">
-                  Deadline: <span className="font-medium text-slate-600">{job.deadline}</span>
+              <div className="pt-5 mt-5 border-t border-slate-200 flex items-center justify-between">
+                <span className="text-xs text-slate-500 font-medium">
+                  Deadline: <span className="font-semibold text-slate-800">{job.deadline}</span>
                 </span>
                 <Link
                   to={`/jobs/${job.id}`}
-                  className="inline-flex items-center space-x-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700"
+                  className="inline-flex items-center space-x-1.5 text-xs font-bold text-sky-700 hover:text-sky-900 transition"
                 >
                   <span>Check Criteria & Apply</span>
                   <ArrowRight className="w-3.5 h-3.5" />

@@ -98,19 +98,19 @@ const JobsPage = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by job title, company, or required skill (e.g. React, Node.js)..."
-              className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
+              className="w-full pl-10 pr-4 py-2.5 text-sm bg-white border-2 border-slate-300 text-slate-900 placeholder:text-slate-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600 shadow-2xs"
             />
           </div>
           <button
             type="submit"
-            className="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-xl shadow-sm transition"
+            className="px-6 py-2.5 bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white text-sm font-bold rounded-xl shadow-xs transition"
           >
             Search
           </button>
         </form>
 
-        <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-slate-100 text-xs">
-          <div className="flex items-center space-x-1.5 text-slate-500 font-medium">
+        <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-slate-200 text-xs">
+          <div className="flex items-center space-x-1.5 text-slate-700 font-bold">
             <Filter className="w-3.5 h-3.5" />
             <span>Filters:</span>
           </div>
@@ -118,7 +118,7 @@ const JobsPage = () => {
           <select
             value={jobType}
             onChange={(e) => setJobType(e.target.value)}
-            className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:outline-none"
+            className="px-3.5 py-1.5 bg-white border-2 border-slate-200 rounded-xl text-slate-800 font-semibold focus:outline-none focus:border-sky-600"
           >
             <option value="">All Job Types</option>
             <option value="FULL_TIME">Full Time</option>
@@ -130,7 +130,7 @@ const JobsPage = () => {
           <select
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:outline-none"
+            className="px-3.5 py-1.5 bg-white border-2 border-slate-200 rounded-xl text-slate-800 font-semibold focus:outline-none focus:border-sky-600"
           >
             <option value="">All Locations</option>
             <option value="Bengaluru">Bengaluru</option>
@@ -142,7 +142,7 @@ const JobsPage = () => {
           <select
             value={minCgpa}
             onChange={(e) => setMinCgpa(e.target.value)}
-            className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:outline-none"
+            className="px-3.5 py-1.5 bg-white border-2 border-slate-200 rounded-xl text-slate-800 font-semibold focus:outline-none focus:border-sky-600"
           >
             <option value="">Any CGPA Cutoff</option>
             <option value="7.0">Max 7.0 CGPA Cutoff</option>
@@ -152,7 +152,7 @@ const JobsPage = () => {
           {(search || jobType || location || minCgpa) && (
             <button
               onClick={handleResetFilters}
-              className="text-xs text-rose-600 hover:underline font-medium ml-auto"
+              className="text-xs text-rose-700 font-bold hover:underline ml-auto"
             >
               Clear Filters
             </button>

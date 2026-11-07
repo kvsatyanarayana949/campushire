@@ -96,7 +96,7 @@ const LoginPage = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@university.edu or company.com"
-                  className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
+                  className="w-full pl-10 pr-4 py-2.5 text-sm bg-white border-2 border-slate-300 text-slate-900 placeholder:text-slate-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600 shadow-xs"
                 />
               </div>
             </div>
@@ -115,7 +115,7 @@ const LoginPage = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
+                  className="w-full pl-10 pr-4 py-2.5 text-sm bg-white border-2 border-slate-300 text-slate-900 placeholder:text-slate-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-600 shadow-xs"
                 />
               </div>
             </div>
@@ -123,7 +123,7 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center space-x-2 py-3 px-4 text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 disabled:bg-brand-400 rounded-xl shadow-md shadow-brand-600/20 transition"
+              className="w-full flex items-center justify-center space-x-2 py-3.5 px-4 text-sm font-bold text-white bg-sky-600 hover:bg-sky-700 disabled:bg-sky-400 rounded-xl shadow-md shadow-sky-600/25 transition-all"
             >
               <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
               <ArrowRight className="w-4 h-4" />
