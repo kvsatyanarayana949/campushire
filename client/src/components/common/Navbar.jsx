@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Briefcase, ArrowRight, LogOut, Menu, X } from 'lucide-react';
@@ -6,6 +6,67 @@ import { Briefcase, ArrowRight, LogOut, Menu, X } from 'lucide-react';
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [registerDropdownOpen, setRegisterDropdownOpen] = useState(false);
+  const registerDropdownRef = useRef(null);
+  const closeTimeoutRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setRegisterDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+    }
+    closeTimeoutRef.current = setTimeout(() => {
+      setRegisterDropdownOpen(false);
+    }, 150);
+  };
+
+  const handleToggleClick = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setRegisterDropdownOpen((prev) => !prev);
+  };
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (registerDropdownRef.current && !registerDropdownRef.current.contains(event.target)) {
+        setRegisterDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, []);
+
+  // Close dropdown on Escape key
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setRegisterDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const getDashboardPath = () => {
     if (!user) return '/login';
@@ -75,24 +136,52 @@ const Navbar = () => {
               >
                 Log In
               </Link>
-              <div className="relative group">
-                <button className="inline-flex items-center space-x-1.5 px-4 py-2 text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-xl shadow-sm transition">
+              <div
+                ref={registerDropdownRef}
+                className="relative inline-block text-left"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <button
+                  type="button"
+                  onClick={handleToggleClick}
+                  aria-expanded={registerDropdownOpen}
+                  aria-haspopup="true"
+                  aria-label="Register options"
+                  className="inline-flex items-center space-x-1.5 px-4 py-2 text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-xl shadow-sm transition focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 cursor-pointer"
+                >
                   <span>Register</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 hidden group-hover:block transition z-50">
-                  <Link
-                    to="/register/student"
-                    className="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600"
-                  >
-                    As Student Candidate
-                  </Link>
-                  <Link
-                    to="/register/recruiter"
-                    className="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600"
-                  >
-                    As Hiring Recruiter
-                  </Link>
+                <div
+                  className={`absolute right-0 top-full pt-1.5 w-48 z-50 transition-all duration-150 ${
+                    registerDropdownOpen
+                      ? 'opacity-100 visible translate-y-0 pointer-events-auto'
+                      : 'opacity-0 invisible -translate-y-1 pointer-events-none'
+                  }`}
+                  role="menu"
+                  aria-orientation="vertical"
+                >
+                  <div className="bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 focus:outline-none">
+                    <Link
+                      to="/register/student"
+                      onClick={() => setRegisterDropdownOpen(false)}
+                      role="menuitem"
+                      tabIndex={registerDropdownOpen ? 0 : -1}
+                      className="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600 transition"
+                    >
+                      As Student Candidate
+                    </Link>
+                    <Link
+                      to="/register/recruiter"
+                      onClick={() => setRegisterDropdownOpen(false)}
+                      role="menuitem"
+                      tabIndex={registerDropdownOpen ? 0 : -1}
+                      className="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600 transition"
+                    >
+                      As Hiring Recruiter
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
