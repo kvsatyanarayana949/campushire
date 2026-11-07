@@ -29,8 +29,8 @@ async function runInit() {
     console.log(`Database '${database}' verified.`);
     await rootConn.end();
   } catch (err) {
-    console.error('Failed to connect to MySQL server:', err.message);
-    process.exit(1);
+    console.log(`Notice during database creation step (${err.message}). Proceeding directly with target database '${database}'...`);
+    if (rootConn) await rootConn.end().catch(() => {});
   }
 
   // Connect to target database and run schema & seed
@@ -49,18 +49,31 @@ async function runInit() {
     const schemaPath = path.join(__dirname, 'schema.sql');
     const seedPath = path.join(__dirname, 'seed.sql');
 
-    console.log('Executing schema.sql...');
+    console.log('Verifying schema tables...');
     const schemaSql = fs.readFileSync(schemaPath, 'utf8');
     await dbConn.query(schemaSql);
-    console.log('Schema tables created successfully.');
+    console.log('Schema tables verified successfully.');
 
-    console.log('Executing seed.sql with demo records...');
-    const seedSql = fs.readFileSync(seedPath, 'utf8');
-    await dbConn.query(seedSql);
-    console.log('Seed data inserted successfully.');
+    let shouldSeed = true;
+    try {
+      const [existingUsers] = await dbConn.query('SELECT COUNT(*) as count FROM users');
+      if (existingUsers && existingUsers[0] && existingUsers[0].count > 0) {
+        console.log(`Database already populated (${existingUsers[0].count} users found). Preserving data.`);
+        shouldSeed = false;
+      }
+    } catch (e) {
+      shouldSeed = true;
+    }
+
+    if (shouldSeed) {
+      console.log('Executing seed.sql with initial demo records...');
+      const seedSql = fs.readFileSync(seedPath, 'utf8');
+      await dbConn.query(seedSql);
+      console.log('Seed data inserted successfully.');
+    }
 
     const [users] = await dbConn.query('SELECT id, name, email, role FROM users');
-    console.log('Verified Users in Database:', users);
+    console.log('Verified Users in Database:', users.length, 'users active.');
 
     const [jobs] = await dbConn.query('SELECT id, title, salary_range, min_cgpa FROM jobs');
     console.log('Verified Jobs in Database:', jobs.length, 'jobs loaded.');

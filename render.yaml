@@ -6,7 +6,7 @@ services:
     region: oregon
     rootDir: server
     buildCommand: npm install
-    startCommand: npm start
+    startCommand: node database/init.js && npm start
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
