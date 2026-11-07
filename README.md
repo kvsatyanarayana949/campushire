@@ -6,6 +6,7 @@
 [![MySQL Version](https://img.shields.io/badge/MySQL-8.0+-orange.svg)](https://www.mysql.com)
 [![Vite](https://img.shields.io/badge/Bundler-Vite-purple.svg)](https://vitejs.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC.svg)](https://tailwindcss.com)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/kvsatyanarayana949/campushire)
 
 CampusHire is a production-grade, full-stack campus recruitment and placement automation SaaS platform. It bridges university candidates, corporate recruiters, and institutional placement cell administrators through automated backend academic eligibility validation, real-time application pipelines, interview scheduling, and placement analytics.
 
