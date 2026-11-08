@@ -18,9 +18,10 @@ export const BackendStatusProvider = ({ children }) => {
     isCheckingRef.current = true;
 
     try {
-      // Abort after 6 seconds to prevent stalled requests
+      // Allow up to 45 seconds for cloud cold-start wakeups (Render free tier)
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6000);
+      const timeoutMs = isReady ? 15000 : 45000;
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
       const response = await api.get('/health/ready', {
         signal: controller.signal,
@@ -34,22 +35,22 @@ export const BackendStatusProvider = ({ children }) => {
         setIsReady(false);
       }
     } catch (_) {
-      // Network failure, timeout, or server sleep
+      // Network failure, timeout, or server cold start in progress
       setIsReady(false);
     } finally {
       isCheckingRef.current = false;
     }
-  }, []);
+  }, [isReady]);
 
   useEffect(() => {
     // Initial probe on application entry
     checkReadiness();
 
     // Schedule periodic polling:
-    // If not ready: check every 10 seconds.
-    // Once ready: check at lower frequency (every 45 seconds).
+    // If not ready: retry 5s after attempt completes so container wakeup is caught quickly.
+    // Once ready: check at lower frequency (every 30 seconds).
     const scheduleNext = () => {
-      const delay = isReady ? 45000 : 10000;
+      const delay = isReady ? 30000 : 5000;
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(async () => {
         await checkReadiness();

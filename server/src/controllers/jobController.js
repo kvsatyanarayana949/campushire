@@ -1,9 +1,13 @@
 const pool = require('../config/db');
 const { successResponse, errorResponse, paginatedResponse } = require('../utils/response');
 const { evaluateEligibility } = require('../services/eligibilityService');
+const { recordEvent } = require('../utils/startupDiagnostics');
+
+let hasRecordedFirstJobs = false;
 
 // GET /api/jobs
 const listJobs = async (req, res, next) => {
+  const reqStart = Date.now();
   try {
     const page = Math.max(1, parseInt(req.query.page || '1', 10));
     const limit = Math.min(50, Math.max(1, parseInt(req.query.limit || '9', 10)));
@@ -116,12 +120,22 @@ const listJobs = async (req, res, next) => {
         application_status: appMap[j.id] || null
       }));
 
+      if (!hasRecordedFirstJobs) {
+        hasRecordedFirstJobs = true;
+        recordEvent('FIRST_JOBS_API_RESPONSE', 'SUCCESS', `Returned ${jobs.length} jobs (total: ${total}) in ${Date.now() - reqStart}ms`);
+      }
+
       return paginatedResponse(res, formatted, {
         page,
         limit,
         total,
         totalPages: Math.ceil(total / limit)
       });
+    }
+
+    if (!hasRecordedFirstJobs) {
+      hasRecordedFirstJobs = true;
+      recordEvent('FIRST_JOBS_API_RESPONSE', 'SUCCESS', `Returned ${jobs.length} jobs (total: ${total}) in ${Date.now() - reqStart}ms`);
     }
 
     return paginatedResponse(res, jobs, {

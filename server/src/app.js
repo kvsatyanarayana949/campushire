@@ -12,7 +12,8 @@ getJwtSecret();
 
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 const checkDbReady = require('./middleware/checkDbReady');
-const { isDbReady, getDbState } = require('./config/dbState');
+const { isDbReady, getDbState, getDbDetails } = require('./config/dbState');
+const { recordEvent, getDiagnostics } = require('./utils/startupDiagnostics');
 
 // Route Imports
 const authRoutes = require('./routes/authRoutes');
@@ -91,15 +92,34 @@ const authLimiter = rateLimit({
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 
+// Root & Platform Health Probes (immediate 200 OK without database overhead)
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'UP',
+    service: 'CampusHire REST API Backend',
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/healthz', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // 1. Process Health Check Endpoint (Render probe - never blocked by database)
 app.get('/api/health', async (req, res) => {
   const dbState = getDbState();
+  const diagnostics = getDiagnostics();
   const responseData = {
     status: 'UP',
     service: 'CampusHire API Backend',
     database: dbState,
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    startupTimeline: {
+      uptimeSeconds: diagnostics.totalUptimeSeconds,
+      eventsRecorded: diagnostics.eventCount,
+      lastEvent: diagnostics.events[diagnostics.events.length - 1] || null
+    }
   };
 
   // Explicit readiness assertion query
@@ -133,9 +153,17 @@ app.get('/api/health', async (req, res) => {
   return res.status(200).json(responseData);
 });
 
+// Dedicated Startup Diagnostics Endpoint (complete event timeline)
+app.get('/api/health/diagnostics', (req, res) => {
+  return res.status(200).json({
+    status: 'SUCCESS',
+    diagnostics: getDiagnostics()
+  });
+});
+
 // 2. Dedicated Database Readiness Endpoint
 app.get('/api/health/ready', (req, res) => {
-  const dbState = getDbState();
+  const dbDetails = getDbDetails();
   if (isDbReady()) {
     return res.status(200).json({
       status: 'READY',
@@ -149,8 +177,9 @@ app.get('/api/health/ready', (req, res) => {
   return res.status(503).json({
     status: 'NOT_READY',
     service: 'CampusHire API Backend',
-    database: dbState,
-    message: 'Database is warming up or undergoing automated recovery.',
+    database: dbDetails.state,
+    lastError: dbDetails.lastError,
+    message: 'Database is warming up or undergoing automated schema verification. Please retry in a few moments.',
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
@@ -172,5 +201,7 @@ app.use('/api/notifications', notificationRoutes);
 // Error Handlers
 app.use(notFoundHandler);
 app.use(errorHandler);
+
+recordEvent('EXPRESS_INIT', 'SUCCESS', 'Middleware, security policies, and 8 API route modules configured.');
 
 module.exports = app;

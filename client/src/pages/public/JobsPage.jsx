@@ -186,6 +186,25 @@ const JobsPage = () => {
             <CardSkeleton key={i} />
           ))}
         </div>
+      ) : error && jobs.length === 0 ? (
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 text-center max-w-md mx-auto space-y-4">
+          <div className="w-12 h-12 bg-sky-50 text-sky-600 rounded-full flex items-center justify-center mx-auto">
+            <RefreshCw className="w-5 h-5 animate-spin" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-slate-900">Connecting to Backend</h3>
+            <p className="text-xs text-slate-500 mt-1">
+              The cloud backend is warming up. As soon as the service finishes initializing, listings will appear automatically.
+            </p>
+          </div>
+          <button
+            onClick={() => fetchJobs(1)}
+            className="inline-flex items-center space-x-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs rounded-xl transition shadow-xs"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Retry Now</span>
+          </button>
+        </div>
       ) : jobs.length === 0 ? (
         <EmptyState
           title="No job openings matched your criteria"

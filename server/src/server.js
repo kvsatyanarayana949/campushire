@@ -2,6 +2,7 @@ const app = require('./app');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const { initializeDatabase, stopLifecycleTimer } = require('./config/dbState');
+const { recordEvent } = require('./utils/startupDiagnostics');
 
 const PORT = parseInt(process.env.PORT, 10) || 5000;
 const HOST = '0.0.0.0';
@@ -16,6 +17,7 @@ process.on('unhandledRejection', (reason) => {
 });
 
 const server = app.listen(PORT, HOST, () => {
+  recordEvent('HTTP_LISTEN', 'SUCCESS', `Express HTTP server listening on ${HOST}:${PORT}`);
   console.log(`===============================================`);
   console.log(`  CampusHire REST API Server Running           `);
   console.log(`  Host:    ${HOST}                             `);
@@ -26,7 +28,7 @@ const server = app.listen(PORT, HOST, () => {
 
   // Asynchronous background database verification and automated recovery lifecycle
   if (process.env.NODE_ENV !== 'test') {
-    initializeDatabase({ retryOnFailure: true, retryDelayMs: 5000 });
+    initializeDatabase({ retryOnFailure: true, retryDelayMs: 4000 });
   }
 });
 
