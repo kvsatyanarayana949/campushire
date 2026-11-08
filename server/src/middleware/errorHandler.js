@@ -39,9 +39,7 @@ const errorHandler = (err, req, res, next) => {
   }
 
   const statusCode = err.statusCode || 500;
-  const message = process.env.NODE_ENV === 'production' 
-    ? 'An unexpected error occurred on the server.' 
-    : err.message || 'Internal Server Error';
+  const message = err.message || 'An unexpected error occurred on the server.';
 
   return errorResponse(res, message, statusCode);
 };
