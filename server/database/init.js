@@ -85,6 +85,7 @@ async function runInit() {
       user,
       password,
       multipleStatements: true,
+      connectTimeout: 20000,
       ssl: sslConfig
     });
     console.log('Connected to MySQL server.');
@@ -107,6 +108,7 @@ async function runInit() {
       password,
       database,
       multipleStatements: true,
+      connectTimeout: 20000,
       ssl: sslConfig
     });
 

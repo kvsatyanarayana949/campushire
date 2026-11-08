@@ -16,6 +16,7 @@ import {
   Target,
 } from 'lucide-react';
 import Badge from '../../components/common/Badge';
+import { CardSkeleton } from '../../components/common/LoadingSkeleton';
 
 const LandingPage = () => {
   const [featuredJobs, setFeaturedJobs] = useState([]);
@@ -150,7 +151,12 @@ const LandingPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {featuredJobs.map((job) => (
+          {loading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <CardSkeleton key={i} />
+            ))
+          ) : featuredJobs.length > 0 ? (
+            featuredJobs.map((job) => (
             <div
               key={job.id}
               className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:border-brand-300 hover:shadow-md transition-all flex flex-col justify-between"
@@ -204,7 +210,16 @@ const LandingPage = () => {
                 </Link>
               </div>
             </div>
-          ))}
+            ))
+          ) : (
+            <div className="col-span-full py-10 px-6 text-center bg-white rounded-2xl border border-slate-200 space-y-2">
+              <p className="text-sm font-semibold text-slate-700">Campus placement opportunities are active.</p>
+              <Link to="/jobs" className="text-xs font-bold text-brand-600 hover:underline inline-flex items-center space-x-1">
+                <span>View all verified openings</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 

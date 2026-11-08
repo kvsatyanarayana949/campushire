@@ -75,9 +75,9 @@ const listJobs = async (req, res, next) => {
 
     // Count
     const [countResult] = await pool.query(
-      `SELECT COUNT(*) as total 
-       FROM jobs j 
-       JOIN companies c ON j.company_id = c.id 
+      `SELECT COUNT(*) as total
+       FROM jobs j
+       LEFT JOIN companies c ON j.company_id = c.id
        ${whereClause}`,
       params
     );
@@ -85,13 +85,15 @@ const listJobs = async (req, res, next) => {
 
     // Rows
     const [jobs] = await pool.query(
-      `SELECT j.*, 
-              c.name as company_name, c.logo_url as company_logo, c.industry as company_industry,
+      `SELECT j.*,
+              COALESCE(c.name, 'Hiring Organization') as company_name,
+              c.logo_url as company_logo,
+              COALESCE(c.industry, 'Technology') as company_industry,
               (SELECT COUNT(*) FROM applications a WHERE a.job_id = j.id) as applicant_count
-       FROM jobs j 
-       JOIN companies c ON j.company_id = c.id 
-       ${whereClause} 
-       ORDER BY ${orderBy} 
+       FROM jobs j
+       LEFT JOIN companies c ON j.company_id = c.id
+       ${whereClause}
+       ORDER BY ${orderBy}
        LIMIT ? OFFSET ?`,
       [...params, limit, offset]
     );

@@ -6,7 +6,7 @@ services:
     region: singapore
     rootDir: server
     buildCommand: npm install
-    startCommand: node database/init.js && npm start
+    startCommand: npm start
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:

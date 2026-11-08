@@ -12,6 +12,8 @@ import {
   ChevronRight,
   ShieldCheck,
   CheckCircle2,
+  AlertCircle,
+  RefreshCw,
 } from 'lucide-react';
 import Badge from '../../components/common/Badge';
 import { CardSkeleton } from '../../components/common/LoadingSkeleton';
@@ -25,6 +27,7 @@ const JobsPage = () => {
   const [jobs, setJobs] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, limit: 9, total: 0, totalPages: 1 });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Search & Filters
   const [search, setSearch] = useState(searchParams.get('search') || '');
@@ -37,6 +40,7 @@ const JobsPage = () => {
 
   const fetchJobs = (page = 1) => {
     setLoading(true);
+    setError(null);
     const params = {
       page,
       limit: 9,
@@ -50,11 +54,22 @@ const JobsPage = () => {
       .get('/jobs', { params })
       .then((res) => {
         if (res.data.success) {
-          setJobs(res.data.data);
-          setPagination(res.data.pagination);
+          setJobs(res.data.data || []);
+          setPagination(res.data.pagination || { page: 1, limit: 9, total: 0, totalPages: 1 });
+        } else {
+          setError(res.data.message || 'Failed to retrieve job openings.');
+          setJobs([]);
         }
       })
-      .catch((err) => console.error('Error fetching jobs:', err))
+      .catch((err) => {
+        console.error('Error fetching jobs:', err);
+        const isTimeout = err.code === 'ECONNABORTED' || err.message?.includes('timeout');
+        const errorMessage = isTimeout
+          ? 'The backend server is waking up from standby (free-tier spin-up). Please wait a moment and click Retry.'
+          : (err.response?.data?.message || err.message || 'Unable to connect to the backend server. Please verify your connection.');
+        setError(errorMessage);
+        setJobs([]);
+      })
       .finally(() => setLoading(false));
   };
 
@@ -166,6 +181,23 @@ const JobsPage = () => {
           {Array.from({ length: 6 }).map((_, i) => (
             <CardSkeleton key={i} />
           ))}
+        </div>
+      ) : error ? (
+        <div className="bg-rose-50 border border-rose-200 rounded-2xl p-8 sm:p-10 text-center max-w-xl mx-auto space-y-4 my-6">
+          <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto border border-rose-200">
+            <AlertCircle className="w-6 h-6" />
+          </div>
+          <div className="space-y-1.5">
+            <h3 className="text-lg font-bold text-slate-900">Unable to Load Campus Drives</h3>
+            <p className="text-sm text-slate-600 leading-relaxed">{error}</p>
+          </div>
+          <button
+            onClick={() => fetchJobs(pagination.page)}
+            className="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-xl shadow-sm transition"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span>Retry Connection</span>
+          </button>
         </div>
       ) : jobs.length === 0 ? (
         <EmptyState

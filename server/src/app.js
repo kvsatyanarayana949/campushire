@@ -70,14 +70,29 @@ const authLimiter = rateLimit({
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 
-// Health Check Endpoint
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
+// Lightweight Process Health Check Endpoint (Returns HTTP 200 immediately without waiting on DB)
+app.get('/api/health', async (req, res) => {
+  const responseData = {
     status: 'UP',
     service: 'CampusHire API Backend',
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
-  });
+  };
+
+  // Optional database audit probe: only checks DB when explicitly requested with ?check_db=true
+  if (req.query.check_db === 'true') {
+    try {
+      const pool = require('./config/db');
+      await pool.query('SELECT 1');
+      responseData.database = 'CONNECTED';
+    } catch (dbErr) {
+      responseData.database = 'DISCONNECTED';
+      responseData.databaseError = dbErr.message;
+      return res.status(503).json(responseData);
+    }
+  }
+
+  return res.status(200).json(responseData);
 });
 
 // API Routes Mount
