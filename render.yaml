@@ -30,3 +30,37 @@ services:
         generateValue: true
       - key: CORS_ORIGIN
         value: https://campushire-mu.vercel.app
+
+  - type: web
+    name: campushire-test-oregon
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: 4000
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: campushire_db
+      - key: DB_SSL
+        value: "true"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: https://campushire-mu.vercel.app
+      - key: READ_ONLY_EXPERIMENT
+        value: "true"

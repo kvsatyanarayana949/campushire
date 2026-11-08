@@ -65,6 +65,20 @@ app.use((req, res, next) => {
   next();
 });
 
+// Read-Only Experiment Guard (Activated only when READ_ONLY_EXPERIMENT=true is set)
+if (process.env.READ_ONLY_EXPERIMENT === 'true') {
+  app.use((req, res, next) => {
+    if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+      return next();
+    }
+    return res.status(403).json({
+      success: false,
+      code: 'READ_ONLY_EXPERIMENT',
+      message: 'This experiment deployment is in read-only mode to safeguard production data.'
+    });
+  });
+}
+
 // Global Request Timeout Guard (25s) to prevent stalled connections
 app.use((req, res, next) => {
   if (req.path.startsWith('/api/health')) return next();

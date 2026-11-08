@@ -97,8 +97,8 @@ async function initializeDatabase(options = {}) {
       recordEvent('DB_INIT_COMPLETED', 'SUCCESS', 'Database schema confirmed and database marked READY');
       recordEvent('APPLICATION_READY', 'SUCCESS', 'CampusHire backend and database are fully operational');
 
-      // 4. Non-blocking idempotent demo maintenance in background (zero CPU overhead using pre-hashed credentials)
-      if (!isTestEnv) {
+      // 4. Non-blocking idempotent demo maintenance in background (skipped in test & read-only experiment modes)
+      if (!isTestEnv && process.env.READ_ONLY_EXPERIMENT !== 'true') {
         setImmediate(async () => {
           let bgConn = null;
           try {
@@ -118,6 +118,8 @@ async function initializeDatabase(options = {}) {
             if (bgConn) bgConn.release();
           }
         });
+      } else if (process.env.READ_ONLY_EXPERIMENT === 'true') {
+        console.log('[DB Lifecycle] READ_ONLY_EXPERIMENT enabled: Background demo data updates skipped.');
       }
     } finally {
       conn.release();
