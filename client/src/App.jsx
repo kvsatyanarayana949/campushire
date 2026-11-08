@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import api from './api/axios';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 
@@ -37,6 +38,11 @@ import AdminJobsPage from './pages/admin/AdminJobsPage';
 import AdminApplicationsPage from './pages/admin/AdminApplicationsPage';
 
 function App() {
+  useEffect(() => {
+    // Proactive background ping: wakes up backend service immediately on any page entry
+    api.get('/health').catch(() => {});
+  }, []);
+
   return (
     <ToastProvider>
       <AuthProvider>
