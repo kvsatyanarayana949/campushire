@@ -11,6 +11,7 @@ import {
   ArrowRight,
   MapPin,
   Calendar,
+  AlertCircle,
 } from 'lucide-react';
 import Badge from '../../components/common/Badge';
 import EmptyState from '../../components/common/EmptyState';
@@ -21,20 +22,26 @@ const ManageJobsPage = () => {
   const { user } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [closeTarget, setCloseTarget] = useState(null);
   const [closing, setClosing] = useState(false);
   const toast = useToast();
 
   const fetchJobs = () => {
     setLoading(true);
+    setError(null);
     api
       .get(`/jobs?status=all&recruiter_id=${user?.id}`)
       .then((res) => {
         if (res.data.success) {
-          setJobs(res.data.data);
+          setJobs(res.data.data || []);
         }
       })
-      .catch((err) => toast.error('Failed to load company openings.'))
+      .catch((err) => {
+        const msg = err.response?.data?.message || 'Failed to load company openings. Server or database is warming up.';
+        setError(msg);
+        toast.error(msg);
+      })
       .finally(() => setLoading(false));
   };
 
@@ -79,6 +86,22 @@ const ManageJobsPage = () => {
 
       {loading ? (
         <TableSkeleton rows={4} />
+      ) : error ? (
+        <div className="bg-rose-50 border border-rose-200 rounded-3xl p-8 sm:p-10 text-center max-w-xl mx-auto space-y-4 my-6">
+          <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto border border-rose-200">
+            <AlertCircle className="w-6 h-6" />
+          </div>
+          <div className="space-y-1.5">
+            <h3 className="text-lg font-bold text-slate-900">Unable to Load Drives</h3>
+            <p className="text-sm text-slate-600 leading-relaxed">{error}</p>
+          </div>
+          <button
+            onClick={fetchJobs}
+            className="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-sm transition"
+          >
+            <span>Retry Connection</span>
+          </button>
+        </div>
       ) : jobs.length === 0 ? (
         <EmptyState
           title="No recruitment drives found"

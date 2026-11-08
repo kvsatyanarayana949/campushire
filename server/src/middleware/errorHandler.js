@@ -22,6 +22,17 @@ const errorHandler = (err, req, res, next) => {
     return errorResponse(res, 'Database relational integrity constraint violated.', 400);
   }
 
+  // MySQL Connection / Serverless Cold Start Timeout Errors
+  const isDbConnError = err.code === 'ECONNREFUSED' ||
+                        err.code === 'PROTOCOL_CONNECTION_LOST' ||
+                        err.code === 'ETIMEDOUT' ||
+                        err.code === 'ER_CON_COUNT_ERROR' ||
+                        err.code === 'ECONNRESET';
+  if (isDbConnError) {
+    res.set('Retry-After', '5');
+    return errorResponse(res, 'Database connection is temporarily unavailable. Please retry in a few moments.', 503);
+  }
+
   // Payload too large
   if (err.type === 'entity.too.large') {
     return errorResponse(res, 'Request body is too large.', 413);

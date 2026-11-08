@@ -11,6 +11,8 @@ const { getJwtSecret } = require('./config/jwt');
 getJwtSecret();
 
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
+const checkDbReady = require('./middleware/checkDbReady');
+const { isDbReady, getDbState } = require('./config/dbState');
 
 // Route Imports
 const authRoutes = require('./routes/authRoutes');
@@ -56,6 +58,25 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
+// Global Request Timeout Guard (25s) to prevent stalled connections
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api/health')) return next();
+  const timer = setTimeout(() => {
+    if (!res.headersSent) {
+      res.set('Retry-After', '5');
+      res.status(504).json({
+        success: false,
+        code: 'REQUEST_TIMEOUT',
+        message: 'The server took longer than expected to process the request. Please retry.'
+      });
+    }
+  }, 25000);
+
+  res.on('finish', () => clearTimeout(timer));
+  res.on('close', () => clearTimeout(timer));
+  next();
+});
+
 // Rate Limiting for Authentication Endpoints (Brute force protection)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -70,16 +91,33 @@ const authLimiter = rateLimit({
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 
-// Lightweight Process Health Check Endpoint (Returns HTTP 200 immediately without waiting on DB)
+// 1. Process Health Check Endpoint (Render probe - never blocked by database)
 app.get('/api/health', async (req, res) => {
+  const dbState = getDbState();
   const responseData = {
     status: 'UP',
     service: 'CampusHire API Backend',
+    database: dbState,
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   };
 
-  // Optional database audit probe: only checks DB when explicitly requested with ?check_db=true
+  // Explicit readiness assertion query
+  if (req.query.ready === 'true') {
+    if (!isDbReady()) {
+      res.set('Retry-After', '5');
+      return res.status(503).json({
+        status: 'DEGRADED',
+        service: 'CampusHire API Backend',
+        database: dbState,
+        message: 'Database is warming up or undergoing automated schema verification.',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime()
+      });
+    }
+  }
+
+  // Explicit live database query probe
   if (req.query.check_db === 'true') {
     try {
       const pool = require('./config/db');
@@ -94,6 +132,32 @@ app.get('/api/health', async (req, res) => {
 
   return res.status(200).json(responseData);
 });
+
+// 2. Dedicated Database Readiness Endpoint
+app.get('/api/health/ready', (req, res) => {
+  const dbState = getDbState();
+  if (isDbReady()) {
+    return res.status(200).json({
+      status: 'READY',
+      service: 'CampusHire API Backend',
+      database: 'READY',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime()
+    });
+  }
+  res.set('Retry-After', '5');
+  return res.status(503).json({
+    status: 'NOT_READY',
+    service: 'CampusHire API Backend',
+    database: dbState,
+    message: 'Database is warming up or undergoing automated recovery.',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
+// 3. Database Readiness Enforcement: Block database-dependent requests until migrations are verified
+app.use('/api', checkDbReady);
 
 // API Routes Mount
 app.use('/api/auth', authRoutes);

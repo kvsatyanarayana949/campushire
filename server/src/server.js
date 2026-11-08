@@ -1,8 +1,18 @@
 const app = require('./app');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+const { initializeDatabase, stopLifecycleTimer } = require('./config/dbState');
 
 const PORT = process.env.PORT || 5000;
+
+// Catch and log any uncaught exceptions or unhandled promise rejections without abrupt crashes
+process.on('uncaughtException', (err) => {
+  console.error('[CRITICAL] Uncaught Exception:', err.stack || err.message);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('[CRITICAL] Unhandled Promise Rejection:', reason);
+});
 
 const server = app.listen(PORT, () => {
   console.log(`===============================================`);
@@ -12,30 +22,26 @@ const server = app.listen(PORT, () => {
   console.log(`  Health:  http://localhost:${PORT}/api/health `);
   console.log(`===============================================`);
 
-  // Non-blocking background migration check on startup (does not block HTTP server or health check)
+  // Asynchronous background database verification and automated recovery lifecycle
   if (process.env.NODE_ENV !== 'test') {
-    (async () => {
-      try {
-        const pool = require('./config/db');
-        const { verifyAndMigrateTokenVersion } = require('../database/init');
-        const conn = await pool.getConnection();
-        try {
-          await verifyAndMigrateTokenVersion(conn, 'users');
-        } finally {
-          conn.release();
-        }
-      } catch (err) {
-        console.warn(`[Startup DB Check] ${err.message}`);
-      }
-    })();
+    initializeDatabase({ retryOnFailure: true, retryDelayMs: 5000 });
   }
 });
 
-// Graceful Shutdown
-const handleShutdown = (signal) => {
-  console.log(`\nReceived ${signal}. Gracefully closing HTTP server...`);
-  server.close(() => {
-    console.log('HTTP server closed. Exiting process.');
+// Graceful Shutdown: close HTTP server, stop background timers, and terminate MySQL pool cleanly
+const handleShutdown = async (signal) => {
+  console.log(`\nReceived ${signal}. Gracefully closing HTTP server and database pool...`);
+  stopLifecycleTimer();
+
+  server.close(async () => {
+    console.log('HTTP server closed.');
+    try {
+      const pool = require('./config/db');
+      await pool.end();
+      console.log('Database connection pool closed successfully.');
+    } catch (dbErr) {
+      console.warn(`[Shutdown Warning] Error closing DB pool: ${dbErr.message}`);
+    }
     process.exit(0);
   });
 };

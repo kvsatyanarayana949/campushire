@@ -23,14 +23,22 @@ const pool = mysql.createPool({
   ssl: useSSL ? { minVersion: 'TLSv1.2', rejectUnauthorized: false } : undefined
 });
 
-// Test connection on boot
+// Resilient pool error handling for dropped idle sockets (common in serverless/cloud DBs)
+pool.on('error', (err) => {
+  console.error('[DB Pool Error]', err.message);
+  if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'ECONNRESET') {
+    console.warn('[DB Pool Notice] Remote connection reset. Pool will reconnect on next acquire.');
+  }
+});
+
+// Non-blocking initial connectivity probe on boot
 (async () => {
   try {
     const connection = await pool.getConnection();
     console.log(`[DB] Connected to MySQL database "${process.env.DB_NAME || 'campushire_db'}" on port ${process.env.DB_PORT || '3306'}.`);
     connection.release();
   } catch (err) {
-    console.error(`[DB Error] Failed to connect to MySQL: ${err.message}`);
+    console.warn(`[DB Notice] Initial connection check to MySQL: ${err.message}`);
   }
 })();
 

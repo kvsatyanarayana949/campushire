@@ -63,9 +63,12 @@ const JobsPage = () => {
       })
       .catch((err) => {
         console.error('Error fetching jobs:', err);
-        const isTimeout = err.code === 'ECONNABORTED' || err.message?.includes('timeout');
-        const errorMessage = isTimeout
-          ? 'The backend server is waking up from standby (free-tier spin-up). Please wait a moment and click Retry.'
+        const isTimeout = err.code === 'ECONNABORTED' || err.message?.includes('timeout') || err.response?.status === 504;
+        const is503 = err.response?.status === 503;
+        const errorMessage = is503
+          ? (err.response?.data?.message || 'Database service is warming up. Please wait a moment and click Retry.')
+          : isTimeout
+          ? 'The server took longer than expected to respond (free-tier cold start). Please click Retry in a few seconds.'
           : (err.response?.data?.message || err.message || 'Unable to connect to the backend server. Please verify your connection.');
         setError(errorMessage);
         setJobs([]);

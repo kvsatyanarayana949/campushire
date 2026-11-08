@@ -28,8 +28,11 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (err) {
       console.warn('Failed to fetch user session:', err.response?.data?.message || err.message);
-      setUser(null);
-      localStorage.removeItem('campushire_token');
+      // Only invalidate token if server explicitly returned 401 Unauthorized
+      if (err.response && err.response.status === 401) {
+        setUser(null);
+        localStorage.removeItem('campushire_token');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -43,6 +46,12 @@ export const AuthProvider = ({ children }) => {
     if (err.response) {
       if (typeof err.response.data === 'object' && err.response.data?.message) {
         return err.response.data.message;
+      }
+      if (err.response.status === 503) {
+        return err.response.data?.message || 'Database service is warming up. Please retry in a few moments.';
+      }
+      if (err.response.status === 504) {
+        return 'Server request timed out. Please retry.';
       }
       if (err.response.status === 404) {
         return 'Backend API service is not reachable (404 Not Found). The backend service may still be deploying on Render.';

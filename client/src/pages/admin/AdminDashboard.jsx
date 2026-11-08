@@ -12,6 +12,7 @@ import {
   Building2,
   CheckCircle2,
   ArrowRight,
+  AlertCircle,
 } from 'lucide-react';
 import {
   BarChart,
@@ -28,9 +29,11 @@ import { StatsSkeleton, CardSkeleton } from '../../components/common/LoadingSkel
 const AdminDashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const loadDashboard = () => {
     setLoading(true);
+    setError(null);
     api
       .get('/admin/dashboard')
       .then((res) => {
@@ -38,8 +41,15 @@ const AdminDashboard = () => {
           setData(res.data.data);
         }
       })
-      .catch((err) => console.error('Failed to load admin dashboard:', err))
+      .catch((err) => {
+        console.error('Failed to load admin dashboard:', err);
+        setError(err.response?.data?.message || 'Server or database is warming up. Please retry.');
+      })
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    loadDashboard();
   }, []);
 
   if (loading) {
@@ -47,6 +57,26 @@ const AdminDashboard = () => {
       <div className="space-y-6">
         <StatsSkeleton />
         <CardSkeleton />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-rose-50 border border-rose-200 rounded-2xl p-8 sm:p-10 text-center max-w-xl mx-auto space-y-4 my-8">
+        <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto border border-rose-200">
+          <AlertCircle className="w-6 h-6" />
+        </div>
+        <div className="space-y-1.5">
+          <h3 className="text-lg font-bold text-slate-900">Analytics Temporarily Unavailable</h3>
+          <p className="text-sm text-slate-600 leading-relaxed">{error}</p>
+        </div>
+        <button
+          onClick={loadDashboard}
+          className="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-sm transition"
+        >
+          <span>Retry Loading Analytics</span>
+        </button>
       </div>
     );
   }
