@@ -17,8 +17,10 @@ import {
 } from 'lucide-react';
 import Badge from '../../components/common/Badge';
 import { CardSkeleton } from '../../components/common/LoadingSkeleton';
+import { useBackendStatus } from '../../context/BackendStatusContext';
 
 const LandingPage = () => {
+  const { isReady } = useBackendStatus();
   const [featuredJobs, setFeaturedJobs] = useState([]);
   const [stats, setStats] = useState({
     total_jobs: 6,
@@ -52,6 +54,31 @@ const LandingPage = () => {
         // Fallback to initial seed count
       });
   }, []);
+
+  // When backend becomes ready, automatically refresh featured jobs and stats
+  useEffect(() => {
+    if (isReady && featuredJobs.length === 0) {
+      setLoading(true);
+      api
+        .get('/jobs?limit=4')
+        .then((res) => {
+          if (res.data.success) {
+            setFeaturedJobs(res.data.data);
+          }
+        })
+        .catch(() => {})
+        .finally(() => setLoading(false));
+
+      api
+        .get('/admin/dashboard')
+        .then((res) => {
+          if (res.data.success && res.data.data.overview) {
+            setStats(res.data.data.overview);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isReady]);
 
   return (
     <div className="space-y-20 pb-20">

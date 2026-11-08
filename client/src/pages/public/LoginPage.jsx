@@ -130,10 +130,10 @@ const LoginPage = () => {
             </button>
           </form>
 
-          {/* Quick Demo Accounts Buttons (Student & Recruiter only) */}
+          {/* Quick Demo Accounts Buttons */}
           <div className="pt-4 border-t border-slate-100 space-y-2">
             <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">
-              One-Click Candidate & Recruiter Demo Accounts
+              One-Click Role Demonstration Accounts
             </p>
             <div className="grid grid-cols-1 gap-2 pt-1">
               <button
@@ -158,6 +158,18 @@ const LoginPage = () => {
                   <span className="text-[10px] text-slate-500">NexusCloud Technologies • Talent Acquisition</span>
                 </div>
                 <span className="text-[10px] font-bold text-indigo-600 uppercase">Fill</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => fillDemoAccount('admin@campushire.io')}
+                className="w-full text-left p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-purple-50 hover:border-purple-200 transition text-xs flex items-center justify-between"
+              >
+                <div>
+                  <span className="font-semibold text-slate-800 block">Administrator: System Admin</span>
+                  <span className="text-[10px] text-slate-500">Campus Placement Cell Director • Full Access</span>
+                </div>
+                <span className="text-[10px] font-bold text-purple-600 uppercase">Fill</span>
               </button>
             </div>
           </div>

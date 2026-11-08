@@ -3,6 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import api from './api/axios';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
+import { BackendStatusProvider } from './context/BackendStatusContext';
+import BackendStatusIndicator from './components/common/BackendStatusIndicator';
 
 // Layouts
 import MainLayout from './layouts/MainLayout';
@@ -46,44 +48,49 @@ function App() {
   return (
     <ToastProvider>
       <AuthProvider>
-        <Routes>
-          {/* Public Website */}
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/jobs" element={<JobsPage />} />
-            <Route path="/jobs/:id" element={<JobDetailsPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register/student" element={<RegisterStudentPage />} />
-            <Route path="/register/recruiter" element={<RegisterRecruiterPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
+        <BackendStatusProvider>
+          <Routes>
+            {/* Public Website */}
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/jobs" element={<JobsPage />} />
+              <Route path="/jobs/:id" element={<JobDetailsPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register/student" element={<RegisterStudentPage />} />
+              <Route path="/register/recruiter" element={<RegisterRecruiterPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
 
-          {/* Student Candidate Portal */}
-          <Route element={<DashboardLayout allowedRoles={['STUDENT']} />}>
-            <Route path="/student" element={<StudentDashboard />} />
-            <Route path="/student/profile" element={<StudentProfile />} />
-            <Route path="/student/applications" element={<MyApplications />} />
-            <Route path="/student/notifications" element={<StudentNotifications />} />
-          </Route>
+            {/* Student Candidate Portal */}
+            <Route element={<DashboardLayout allowedRoles={['STUDENT']} />}>
+              <Route path="/student" element={<StudentDashboard />} />
+              <Route path="/student/profile" element={<StudentProfile />} />
+              <Route path="/student/applications" element={<MyApplications />} />
+              <Route path="/student/notifications" element={<StudentNotifications />} />
+            </Route>
 
-          {/* Recruiter Enterprise Hub */}
-          <Route element={<DashboardLayout allowedRoles={['RECRUITER']} />}>
-            <Route path="/recruiter" element={<RecruiterDashboard />} />
-            <Route path="/recruiter/jobs/new" element={<CreateJobPage />} />
-            <Route path="/recruiter/jobs" element={<ManageJobsPage />} />
-            <Route path="/recruiter/jobs/:jobId/applicants" element={<JobApplicantsPage />} />
-            <Route path="/recruiter/profile" element={<RecruiterProfile />} />
-            <Route path="/recruiter/students" element={<StudentsDirectoryPage />} />
-          </Route>
+            {/* Recruiter Enterprise Hub */}
+            <Route element={<DashboardLayout allowedRoles={['RECRUITER']} />}>
+              <Route path="/recruiter" element={<RecruiterDashboard />} />
+              <Route path="/recruiter/jobs/new" element={<CreateJobPage />} />
+              <Route path="/recruiter/jobs" element={<ManageJobsPage />} />
+              <Route path="/recruiter/jobs/:jobId/applicants" element={<JobApplicantsPage />} />
+              <Route path="/recruiter/profile" element={<RecruiterProfile />} />
+              <Route path="/recruiter/students" element={<StudentsDirectoryPage />} />
+            </Route>
 
-          {/* Institutional Administration Console */}
-          <Route element={<DashboardLayout allowedRoles={['ADMIN']} />}>
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/users" element={<UserManagementPage />} />
-            <Route path="/admin/jobs" element={<AdminJobsPage />} />
-            <Route path="/admin/applications" element={<AdminApplicationsPage />} />
-          </Route>
-        </Routes>
+            {/* Institutional Administration Console */}
+            <Route element={<DashboardLayout allowedRoles={['ADMIN']} />}>
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/users" element={<UserManagementPage />} />
+              <Route path="/admin/jobs" element={<AdminJobsPage />} />
+              <Route path="/admin/applications" element={<AdminApplicationsPage />} />
+            </Route>
+          </Routes>
+
+          {/* Global Subtle Backend Status Indicator */}
+          <BackendStatusIndicator />
+        </BackendStatusProvider>
       </AuthProvider>
     </ToastProvider>
   );

@@ -31,15 +31,4 @@ pool.on('error', (err) => {
   }
 });
 
-// Non-blocking initial connectivity probe on boot
-(async () => {
-  try {
-    const connection = await pool.getConnection();
-    console.log(`[DB] Connected to MySQL database "${process.env.DB_NAME || 'campushire_db'}" on port ${process.env.DB_PORT || '3306'}.`);
-    connection.release();
-  } catch (err) {
-    console.warn(`[DB Notice] Initial connection check to MySQL: ${err.message}`);
-  }
-})();
-
 module.exports = pool;

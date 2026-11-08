@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import api from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
+import { useBackendStatus } from '../../context/BackendStatusContext';
 import {
   Search,
   Filter,
@@ -23,6 +24,7 @@ import EligibilityModal from '../../components/common/EligibilityModal';
 const JobsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { user, isStudent } = useAuth();
+  const { isReady } = useBackendStatus();
 
   const [jobs, setJobs] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, limit: 9, total: 0, totalPages: 1 });
@@ -63,15 +65,7 @@ const JobsPage = () => {
       })
       .catch((err) => {
         console.error('Error fetching jobs:', err);
-        const isTimeout = err.code === 'ECONNABORTED' || err.message?.includes('timeout') || err.response?.status === 504;
-        const is503 = err.response?.status === 503;
-        const errorMessage = is503
-          ? (err.response?.data?.message || 'Database service is warming up. Please wait a moment and click Retry.')
-          : isTimeout
-          ? 'The server took longer than expected to respond (free-tier cold start). Please click Retry in a few seconds.'
-          : (err.response?.data?.message || err.message || 'Unable to connect to the backend server. Please verify your connection.');
-        setError(errorMessage);
-        setJobs([]);
+        setError(err.response?.data?.message || err.message || 'Connecting to backend service...');
       })
       .finally(() => setLoading(false));
   };
@@ -79,6 +73,13 @@ const JobsPage = () => {
   useEffect(() => {
     fetchJobs(1);
   }, [jobType, location, minCgpa]);
+
+  // When backend readiness endpoint confirms READY, automatically load jobs seamlessly
+  useEffect(() => {
+    if (isReady && jobs.length === 0) {
+      fetchJobs(1);
+    }
+  }, [isReady]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -179,28 +180,11 @@ const JobsPage = () => {
       </div>
 
       {/* Jobs Grid */}
-      {loading ? (
+      {loading || (!isReady && jobs.length === 0) ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {Array.from({ length: 6 }).map((_, i) => (
             <CardSkeleton key={i} />
           ))}
-        </div>
-      ) : error ? (
-        <div className="bg-rose-50 border border-rose-200 rounded-2xl p-8 sm:p-10 text-center max-w-xl mx-auto space-y-4 my-6">
-          <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto border border-rose-200">
-            <AlertCircle className="w-6 h-6" />
-          </div>
-          <div className="space-y-1.5">
-            <h3 className="text-lg font-bold text-slate-900">Unable to Load Campus Drives</h3>
-            <p className="text-sm text-slate-600 leading-relaxed">{error}</p>
-          </div>
-          <button
-            onClick={() => fetchJobs(pagination.page)}
-            className="inline-flex items-center space-x-2 px-5 py-2.5 text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-xl shadow-sm transition"
-          >
-            <RefreshCw className="w-4 h-4" />
-            <span>Retry Connection</span>
-          </button>
         </div>
       ) : jobs.length === 0 ? (
         <EmptyState

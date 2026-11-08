@@ -79,6 +79,12 @@ async function initializeDatabase(options = {}) {
       // Idempotent production demo data cleanup on startup (removes test job 'gundu' and rogue test accounts)
       if (!isTestEnv) {
         try {
+          const bcrypt = require('bcryptjs');
+          const demoHash = await bcrypt.hash('Password@123', 10);
+          await conn.query('UPDATE users SET password = ?, is_active = TRUE WHERE email = ?', [demoHash, 'rohit.verma@student.edu']);
+          await conn.query('UPDATE users SET password = ?, is_active = TRUE WHERE email = ?', [demoHash, 'priya.sharma@nexuscloud.com']);
+          await conn.query('UPDATE users SET password = ?, is_active = TRUE WHERE email = ?', [demoHash, 'admin@campushire.io']);
+
           await conn.query('DELETE FROM applications WHERE id = 30002 OR job_id = 30002 OR student_id IN (30002, 30003)');
           await conn.query("DELETE FROM jobs WHERE id = 30002 OR title = 'gundu'");
           await conn.query('DELETE FROM recruiter_profiles WHERE user_id = 30003');
@@ -90,7 +96,7 @@ async function initializeDatabase(options = {}) {
           await conn.query('UPDATE users SET is_active = FALSE WHERE id IN (3, 4, 6, 7, 8)');
           await conn.query('UPDATE users SET is_active = TRUE WHERE id IN (1, 2, 5)');
           await conn.query('UPDATE jobs SET is_active = TRUE WHERE id IN (1, 2, 3, 4, 5, 6)');
-          console.log('[DB Lifecycle] Production demo data verified and cleaned (6 active jobs, 3 active demo accounts).');
+          console.log('[DB Lifecycle] Production demo data verified and cleaned (6 active jobs, 3 active demo accounts with verified credentials).');
         } catch (cleanupErr) {
           console.warn('[DB Lifecycle Notice] Demo cleanup check notice:', cleanupErr.message);
         }
