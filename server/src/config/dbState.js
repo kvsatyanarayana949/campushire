@@ -76,6 +76,26 @@ async function initializeDatabase(options = {}) {
       // Run idempotent, race-safe migration verification
       await verifyAndMigrateTokenVersion(conn, 'users');
 
+      // Idempotent production demo data cleanup on startup (removes test job 'gundu' and rogue test accounts)
+      if (!isTestEnv) {
+        try {
+          await conn.query('DELETE FROM applications WHERE id = 30002 OR job_id = 30002 OR student_id IN (30002, 30003)');
+          await conn.query("DELETE FROM jobs WHERE id = 30002 OR title = 'gundu'");
+          await conn.query('DELETE FROM recruiter_profiles WHERE user_id = 30003');
+          await conn.query('DELETE FROM student_skills WHERE student_id IN (SELECT id FROM student_profiles WHERE user_id = 30002)');
+          await conn.query('DELETE FROM student_profiles WHERE user_id = 30002');
+          await conn.query("DELETE FROM companies WHERE id = 30002 OR name = 'suridu'");
+          await conn.query('DELETE FROM notifications WHERE user_id IN (30002, 30003)');
+          await conn.query("DELETE FROM users WHERE id IN (30002, 30003) OR email IN ('toyeso4513@betzen.com', 'toyeso4513@betzenn.com')");
+          await conn.query('UPDATE users SET is_active = FALSE WHERE id IN (3, 4, 6, 7, 8)');
+          await conn.query('UPDATE users SET is_active = TRUE WHERE id IN (1, 2, 5)');
+          await conn.query('UPDATE jobs SET is_active = TRUE WHERE id IN (1, 2, 3, 4, 5, 6)');
+          console.log('[DB Lifecycle] Production demo data verified and cleaned (6 active jobs, 3 active demo accounts).');
+        } catch (cleanupErr) {
+          console.warn('[DB Lifecycle Notice] Demo cleanup check notice:', cleanupErr.message);
+        }
+      }
+
       setDbState(DB_STATES.READY);
       console.log('[DB Lifecycle] Database successfully verified and marked READY. API endpoints active.');
     } finally {

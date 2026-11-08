@@ -345,11 +345,112 @@ const changeAdminPassword = async (req, res, next) => {
   }
 };
 
+// POST /api/admin/cleanup-demo-data
+const cleanupDemoData = async (req, res, next) => {
+  let connection;
+  try {
+    connection = await pool.getConnection();
+
+    // Safety Pre-Check: Ensure the 6 approved demo jobs exist
+    const [approvedJobs] = await connection.query(
+      'SELECT id, title, is_active FROM jobs WHERE id IN (1, 2, 3, 4, 5, 6)'
+    );
+    if (approvedJobs.length < 6) {
+      return errorResponse(res, 'Safety violation: One or more approved seed jobs (IDs 1-6) are missing. Aborting cleanup.', 500);
+    }
+
+    // Safety Pre-Check: Ensure the 3 primary demo accounts exist
+    const [primaryUsers] = await connection.query(
+      'SELECT id, email, role FROM users WHERE id IN (1, 2, 5)'
+    );
+    if (primaryUsers.length < 3) {
+      return errorResponse(res, 'Safety violation: One or more primary demo accounts (IDs 1, 2, 5) are missing. Aborting cleanup.', 500);
+    }
+
+    await connection.beginTransaction();
+
+    // 1. Remove test applications (specifically application 30002 or applications for test job 30002)
+    const [appDelete] = await connection.query(
+      'DELETE FROM applications WHERE id = 30002 OR job_id = 30002 OR student_id IN (30002, 30003)'
+    );
+
+    // 2. Remove test jobs (specifically job 30002 / title "gundu")
+    const [jobDelete] = await connection.query(
+      'DELETE FROM jobs WHERE id = 30002 OR title = ?',
+      ['gundu']
+    );
+
+    // 3. Remove test recruiter profile and company (suridu)
+    await connection.query('DELETE FROM recruiter_profiles WHERE user_id = 30003');
+    const [companyDelete] = await connection.query(
+      'DELETE FROM companies WHERE id = 30002 OR name = ?',
+      ['suridu']
+    );
+
+    // 4. Remove test student profile, skills, and notifications
+    await connection.query(
+      'DELETE FROM student_skills WHERE student_id IN (SELECT id FROM student_profiles WHERE user_id = 30002)'
+    );
+    await connection.query('DELETE FROM student_profiles WHERE user_id = 30002');
+    await connection.query('DELETE FROM notifications WHERE user_id IN (30002, 30003)');
+
+    // 5. Remove test users (satya / betzen accounts)
+    const [userDelete] = await connection.query(
+      'DELETE FROM users WHERE id IN (30002, 30003) OR email IN (?, ?)',
+      ['toyeso4513@betzen.com', 'toyeso4513@betzenn.com']
+    );
+
+    // 6. Deactivate secondary demo duplicate accounts so only the 3 primary demo accounts are active
+    await connection.query('UPDATE users SET is_active = FALSE WHERE id IN (3, 4, 6, 7, 8)');
+    await connection.query('UPDATE users SET is_active = TRUE WHERE id IN (1, 2, 5)');
+
+    // 7. Verify all 6 approved jobs are active
+    await connection.query('UPDATE jobs SET is_active = TRUE WHERE id IN (1, 2, 3, 4, 5, 6)');
+
+    await connection.commit();
+
+    // 8. Post-verification query
+    const [finalJobs] = await connection.query(
+      'SELECT id, title, company_id, recruiter_id, is_active FROM jobs WHERE is_active = TRUE ORDER BY id ASC'
+    );
+    const [finalUsers] = await connection.query(
+      'SELECT id, name, email, role, is_active FROM users ORDER BY id ASC'
+    );
+    const [finalApps] = await connection.query(
+      'SELECT id, job_id, student_id, status FROM applications ORDER BY id ASC'
+    );
+
+    return successResponse(
+      res,
+      {
+        cleaned: {
+          testJobsRemoved: jobDelete.affectedRows,
+          testUsersRemoved: userDelete.affectedRows,
+          testCompaniesRemoved: companyDelete.affectedRows,
+          testApplicationsRemoved: appDelete.affectedRows
+        },
+        retainedJobs: finalJobs,
+        retainedUsers: finalUsers,
+        retainedApplications: finalApps
+      },
+      'Production demo data cleanup completed successfully.'
+    );
+  } catch (err) {
+    if (connection) {
+      try { await connection.rollback(); } catch (_) {}
+    }
+    next(err);
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
 module.exports = {
   getDashboardMetrics,
   listUsers,
   toggleUserStatus,
   listAllJobs,
   listAllApplications,
-  changeAdminPassword
+  changeAdminPassword,
+  cleanupDemoData
 };

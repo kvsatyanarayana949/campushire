@@ -31,4 +31,7 @@ router.get('/applications', adminController.listAllApplications);
 // Secure Admin Password Change
 router.post('/change-password', changePasswordLimiter, validate(changePasswordValidator), adminController.changeAdminPassword);
 
+// Production Demo Data Cleanup (Restricted to ADMIN)
+router.post('/cleanup-demo-data', adminController.cleanupDemoData);
+
 module.exports = router;

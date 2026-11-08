@@ -1,0 +1,635 @@
+{
+  "backupTimestamp": "2026-11-08T07:56:46.514Z",
+  "environment": "production",
+  "sourceHost": "https://campushire-satya-backend.onrender.com",
+  "dashboard": {
+    "overview": {
+      "total_students": 5,
+      "total_recruiters": 4,
+      "total_companies": 4,
+      "active_jobs": 7,
+      "total_jobs": 7,
+      "total_applications": 6,
+      "total_placed_students": 1
+    },
+    "statusBreakdown": [
+      {
+        "status": "APPLIED",
+        "count": 2
+      },
+      {
+        "status": "UNDER_REVIEW",
+        "count": 1
+      },
+      {
+        "status": "SHORTLISTED",
+        "count": 2
+      },
+      {
+        "status": "SELECTED",
+        "count": 1
+      }
+    ],
+    "departmentStats": [
+      {
+        "department": "Computer Science & Engineering",
+        "total_enrolled": 2,
+        "placed_count": 0
+      },
+      {
+        "department": "Information Technology",
+        "total_enrolled": 1,
+        "placed_count": 0
+      },
+      {
+        "department": "Electronics & Communication",
+        "total_enrolled": 1,
+        "placed_count": 1
+      },
+      {
+        "department": "Mechanical Engineering",
+        "total_enrolled": 1,
+        "placed_count": 0
+      }
+    ],
+    "topCompanies": [
+      {
+        "id": 1,
+        "name": "NexusCloud Technologies",
+        "logo_url": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=128&h=128&fit=crop&crop=faces",
+        "industry": "Cloud Infrastructure & SaaS",
+        "job_openings": 2,
+        "total_applications": 3,
+        "selections_count": 1
+      },
+      {
+        "id": 2,
+        "name": "Apex FinTech Labs",
+        "logo_url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=128&h=128&fit=crop&crop=faces",
+        "industry": "Financial Technology & Banking",
+        "job_openings": 2,
+        "total_applications": 2,
+        "selections_count": 0
+      },
+      {
+        "id": 3,
+        "name": "CyberNova Solutions",
+        "logo_url": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=128&h=128&fit=crop&crop=faces",
+        "industry": "Cybersecurity & Defense",
+        "job_openings": 2,
+        "total_applications": 1,
+        "selections_count": 0
+      },
+      {
+        "id": 30002,
+        "name": "suridu",
+        "logo_url": null,
+        "industry": "Technology & Software",
+        "job_openings": 1,
+        "total_applications": 0,
+        "selections_count": 0
+      }
+    ],
+    "recentActivities": [
+      {
+        "id": 30002,
+        "status": "APPLIED",
+        "updated_at": "2026-11-07 12:17:59",
+        "student_name": "satya",
+        "roll_number": "22a21",
+        "department": "Computer Science & Engineering",
+        "job_title": "Associate Full Stack Software Engineer",
+        "company_name": "NexusCloud Technologies"
+      },
+      {
+        "id": 2,
+        "status": "UNDER_REVIEW",
+        "updated_at": "2026-11-07 11:45:58",
+        "student_name": "Rohit Verma",
+        "roll_number": "22CS1045",
+        "department": "Computer Science & Engineering",
+        "job_title": "FinTech Backend API Engineer",
+        "company_name": "Apex FinTech Labs"
+      },
+      {
+        "id": 1,
+        "status": "SHORTLISTED",
+        "updated_at": "2026-11-07 11:45:58",
+        "student_name": "Rohit Verma",
+        "roll_number": "22CS1045",
+        "department": "Computer Science & Engineering",
+        "job_title": "Associate Full Stack Software Engineer",
+        "company_name": "NexusCloud Technologies"
+      },
+      {
+        "id": 3,
+        "status": "APPLIED",
+        "updated_at": "2026-11-07 11:45:58",
+        "student_name": "Ananya Sen",
+        "roll_number": "22IT1012",
+        "department": "Information Technology",
+        "job_title": "Frontend UI/UX Systems Specialist",
+        "company_name": "CyberNova Solutions"
+      },
+      {
+        "id": 5,
+        "status": "SHORTLISTED",
+        "updated_at": "2026-11-07 11:45:58",
+        "student_name": "Kavya Nair",
+        "roll_number": "22EC1089",
+        "department": "Electronics & Communication",
+        "job_title": "Data Analytics & ML Research Intern",
+        "company_name": "Apex FinTech Labs"
+      },
+      {
+        "id": 4,
+        "status": "SELECTED",
+        "updated_at": "2026-11-07 11:45:58",
+        "student_name": "Kavya Nair",
+        "roll_number": "22EC1089",
+        "department": "Electronics & Communication",
+        "job_title": "Cloud DevOps & Site Reliability Engineer",
+        "company_name": "NexusCloud Technologies"
+      }
+    ]
+  },
+  "users": [
+    {
+      "id": 30003,
+      "name": "satya",
+      "email": "toyeso4513@betzen.com",
+      "role": "RECRUITER",
+      "is_active": 1,
+      "created_at": "2026-11-07 12:19:54"
+    },
+    {
+      "id": 30002,
+      "name": "satya",
+      "email": "toyeso4513@betzenn.com",
+      "role": "STUDENT",
+      "is_active": 1,
+      "created_at": "2026-11-07 12:15:03"
+    },
+    {
+      "id": 8,
+      "name": "Vikram Singh",
+      "email": "vikram.singh@student.edu",
+      "role": "STUDENT",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58"
+    },
+    {
+      "id": 7,
+      "name": "Kavya Nair",
+      "email": "kavya.nair@student.edu",
+      "role": "STUDENT",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58"
+    },
+    {
+      "id": 6,
+      "name": "Ananya Sen",
+      "email": "ananya.sen@student.edu",
+      "role": "STUDENT",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58"
+    },
+    {
+      "id": 5,
+      "name": "Rohit Verma",
+      "email": "rohit.verma@student.edu",
+      "role": "STUDENT",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58"
+    },
+    {
+      "id": 4,
+      "name": "Sneha Patel (CyberNova Tech)",
+      "email": "sneha.patel@cybernova.in",
+      "role": "RECRUITER",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58"
+    },
+    {
+      "id": 3,
+      "name": "Arjun Mehta (Apex FinTech Lead)",
+      "email": "arjun.mehta@fintechlabs.io",
+      "role": "RECRUITER",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58"
+    },
+    {
+      "id": 2,
+      "name": "Priya Sharma (NexusCloud HR)",
+      "email": "priya.sharma@nexuscloud.com",
+      "role": "RECRUITER",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58"
+    },
+    {
+      "id": 1,
+      "name": "System Administrator",
+      "email": "admin@campushire.io",
+      "role": "ADMIN",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58"
+    }
+  ],
+  "jobs": [
+    {
+      "id": 30002,
+      "company_id": 30002,
+      "recruiter_id": 30003,
+      "title": "gundu",
+      "description": "hi,sfdsf",
+      "job_type": "FULL_TIME",
+      "location": "Bengaluru, India",
+      "salary_range": "₹10,00,000 - ₹14,00,000 PA",
+      "min_cgpa": "7.00",
+      "max_backlogs": 0,
+      "eligible_graduation_year": 2026,
+      "eligible_degrees": "B.Tech,M.Tech,MCA",
+      "eligible_departments": "Computer Science & Engineering,Information Technology",
+      "required_skills": "React,Node.js,MySQL",
+      "deadline": "2026-12-31",
+      "is_active": 1,
+      "created_at": "2026-11-07 12:20:54",
+      "updated_at": "2026-11-07 12:20:54",
+      "company_name": "suridu",
+      "recruiter_name": "satya",
+      "applicant_count": 0
+    },
+    {
+      "id": 1,
+      "company_id": 1,
+      "recruiter_id": 2,
+      "title": "Associate Full Stack Software Engineer",
+      "description": "Join our core platform engineering team to build scalable microservices and intuitive dashboard interfaces. You will collaborate with senior architects to implement robust REST APIs and responsive web apps.",
+      "job_type": "FULL_TIME",
+      "location": "Bengaluru, Karnataka (Hybrid)",
+      "salary_range": "₹12,00,000 - ₹16,00,000 PA",
+      "min_cgpa": "7.50",
+      "max_backlogs": 0,
+      "eligible_graduation_year": 2026,
+      "eligible_degrees": "B.Tech,M.Tech,MCA",
+      "eligible_departments": "Computer Science & Engineering,Information Technology,Electronics & Communication",
+      "required_skills": "React,Node.js,MySQL,JavaScript",
+      "deadline": "2026-12-31",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58",
+      "updated_at": "2026-11-07 11:45:58",
+      "company_name": "NexusCloud Technologies",
+      "recruiter_name": "Priya Sharma (NexusCloud HR)",
+      "applicant_count": 2
+    },
+    {
+      "id": 2,
+      "company_id": 1,
+      "recruiter_id": 2,
+      "title": "Cloud DevOps & Site Reliability Engineer",
+      "description": "Responsible for modern CI/CD pipelines, container orchestration, automated infrastructure provisioning via Terraform, and 99.99% system availability monitoring.",
+      "job_type": "FULL_TIME",
+      "location": "Bengaluru, Karnataka",
+      "salary_range": "₹14,00,000 - ₹18,00,000 PA",
+      "min_cgpa": "8.00",
+      "max_backlogs": 0,
+      "eligible_graduation_year": 2026,
+      "eligible_degrees": "B.Tech,M.Tech",
+      "eligible_departments": "Computer Science & Engineering,Information Technology,Electronics & Communication",
+      "required_skills": "Docker,AWS,Python,Linux",
+      "deadline": "2026-11-30",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58",
+      "updated_at": "2026-11-07 11:45:58",
+      "company_name": "NexusCloud Technologies",
+      "recruiter_name": "Priya Sharma (NexusCloud HR)",
+      "applicant_count": 1
+    },
+    {
+      "id": 3,
+      "company_id": 2,
+      "recruiter_id": 3,
+      "title": "FinTech Backend API Engineer",
+      "description": "Develop high-throughput transaction processing pipelines, secure REST endpoints, and low-latency database queries in our PCI-DSS certified environment.",
+      "job_type": "FULL_TIME",
+      "location": "Mumbai, Maharashtra",
+      "salary_range": "₹11,00,000 - ₹15,00,000 PA",
+      "min_cgpa": "7.00",
+      "max_backlogs": 0,
+      "eligible_graduation_year": 2026,
+      "eligible_degrees": "B.Tech,MCA,B.Sc",
+      "eligible_departments": "All Departments",
+      "required_skills": "Node.js,Express.js,MySQL,JavaScript",
+      "deadline": "2026-12-15",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58",
+      "updated_at": "2026-11-07 11:45:58",
+      "company_name": "Apex FinTech Labs",
+      "recruiter_name": "Arjun Mehta (Apex FinTech Lead)",
+      "applicant_count": 1
+    },
+    {
+      "id": 4,
+      "company_id": 2,
+      "recruiter_id": 3,
+      "title": "Data Analytics & ML Research Intern",
+      "description": "Work directly alongside our chief risk officer to analyze credit default vectors, train algorithmic risk scoring models, and build real-time monitoring charts.",
+      "job_type": "INTERNSHIP",
+      "location": "Remote / Work From Home",
+      "salary_range": "₹45,000 - ₹60,000 / month",
+      "min_cgpa": "8.50",
+      "max_backlogs": 0,
+      "eligible_graduation_year": 2026,
+      "eligible_degrees": "B.Tech,M.Tech",
+      "eligible_departments": "Computer Science & Engineering,Information Technology",
+      "required_skills": "Python,SQL,Data Analysis,Machine Learning",
+      "deadline": "2026-12-20",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58",
+      "updated_at": "2026-11-07 11:45:58",
+      "company_name": "Apex FinTech Labs",
+      "recruiter_name": "Arjun Mehta (Apex FinTech Lead)",
+      "applicant_count": 1
+    },
+    {
+      "id": 5,
+      "company_id": 3,
+      "recruiter_id": 4,
+      "title": "Cybersecurity Threat Intelligence Analyst",
+      "description": "Analyze malware signatures, configure web application firewalls, review codebase vulnerabilities, and automate security telemetry parsing.",
+      "job_type": "FULL_TIME",
+      "location": "Hyderabad, Telangana",
+      "salary_range": "₹10,00,000 - ₹13,50,000 PA",
+      "min_cgpa": "7.00",
+      "max_backlogs": 1,
+      "eligible_graduation_year": 2026,
+      "eligible_degrees": "B.Tech,M.Tech,MCA",
+      "eligible_departments": "All Departments",
+      "required_skills": "Networking,Python,Linux,Cybersecurity",
+      "deadline": "2026-12-10",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58",
+      "updated_at": "2026-11-07 11:45:58",
+      "company_name": "CyberNova Solutions",
+      "recruiter_name": "Sneha Patel (CyberNova Tech)",
+      "applicant_count": 0
+    },
+    {
+      "id": 6,
+      "company_id": 3,
+      "recruiter_id": 4,
+      "title": "Frontend UI/UX Systems Specialist",
+      "description": "Craft high-performance, accessible, and responsive user interfaces. You will maintain our custom component design system and ensure sub-second page loads across devices.",
+      "job_type": "FULL_TIME",
+      "location": "Hyderabad, Telangana",
+      "salary_range": "₹9,00,000 - ₹12,00,000 PA",
+      "min_cgpa": "6.50",
+      "max_backlogs": 1,
+      "eligible_graduation_year": 2026,
+      "eligible_degrees": "B.Tech,MCA,B.Sc",
+      "eligible_departments": "All Departments",
+      "required_skills": "React,Tailwind CSS,JavaScript,HTML5",
+      "deadline": "2026-12-25",
+      "is_active": 1,
+      "created_at": "2026-11-07 11:45:58",
+      "updated_at": "2026-11-07 11:45:58",
+      "company_name": "CyberNova Solutions",
+      "recruiter_name": "Sneha Patel (CyberNova Tech)",
+      "applicant_count": 1
+    }
+  ],
+  "applications": [
+    {
+      "id": 30002,
+      "job_id": 1,
+      "student_id": 30002,
+      "status": "APPLIED",
+      "cover_letter": "hi,this is satya",
+      "applied_at": "2026-11-07 12:17:59",
+      "updated_at": "2026-11-07 12:17:59",
+      "student_name": "satya",
+      "student_email": "toyeso4513@betzenn.com",
+      "roll_number": "22a21",
+      "department": "Computer Science & Engineering",
+      "cgpa": "8.49",
+      "job_title": "Associate Full Stack Software Engineer",
+      "company_name": "NexusCloud Technologies"
+    },
+    {
+      "id": 5,
+      "job_id": 4,
+      "student_id": 7,
+      "status": "SHORTLISTED",
+      "cover_letter": "Excited about quantitative financial modeling and distributed data analytics.",
+      "applied_at": "2026-11-04 16:20:00",
+      "updated_at": "2026-11-07 11:45:58",
+      "student_name": "Kavya Nair",
+      "student_email": "kavya.nair@student.edu",
+      "roll_number": "22EC1089",
+      "department": "Electronics & Communication",
+      "cgpa": "9.20",
+      "job_title": "Data Analytics & ML Research Intern",
+      "company_name": "Apex FinTech Labs"
+    },
+    {
+      "id": 3,
+      "job_id": 6,
+      "student_id": 6,
+      "status": "APPLIED",
+      "cover_letter": "Passionate about frontend component architectures, Tailwind CSS design systems, and fast client-side rendering.",
+      "applied_at": "2026-11-03 09:00:00",
+      "updated_at": "2026-11-07 11:45:58",
+      "student_name": "Ananya Sen",
+      "student_email": "ananya.sen@student.edu",
+      "roll_number": "22IT1012",
+      "department": "Information Technology",
+      "cgpa": "7.40",
+      "job_title": "Frontend UI/UX Systems Specialist",
+      "company_name": "CyberNova Solutions"
+    },
+    {
+      "id": 2,
+      "job_id": 3,
+      "student_id": 5,
+      "status": "UNDER_REVIEW",
+      "cover_letter": "Strong foundation in SQL transactions, relational database indexing, and secure Express middleware.",
+      "applied_at": "2026-11-02 14:30:00",
+      "updated_at": "2026-11-07 11:45:58",
+      "student_name": "Rohit Verma",
+      "student_email": "rohit.verma@student.edu",
+      "roll_number": "22CS1045",
+      "department": "Computer Science & Engineering",
+      "cgpa": "8.75",
+      "job_title": "FinTech Backend API Engineer",
+      "company_name": "Apex FinTech Labs"
+    },
+    {
+      "id": 1,
+      "job_id": 1,
+      "student_id": 5,
+      "status": "SHORTLISTED",
+      "cover_letter": "I have built multiple production-grade web applications using React and Node.js. Excited for NexusCloud!",
+      "applied_at": "2026-11-01 10:15:00",
+      "updated_at": "2026-11-07 11:45:58",
+      "student_name": "Rohit Verma",
+      "student_email": "rohit.verma@student.edu",
+      "roll_number": "22CS1045",
+      "department": "Computer Science & Engineering",
+      "cgpa": "8.75",
+      "job_title": "Associate Full Stack Software Engineer",
+      "company_name": "NexusCloud Technologies"
+    },
+    {
+      "id": 4,
+      "job_id": 2,
+      "student_id": 7,
+      "status": "SELECTED",
+      "cover_letter": "Demonstrated expertise in Docker, cloud microservices, and database tuning with 9.20 CGPA.",
+      "applied_at": "2026-10-28 11:00:00",
+      "updated_at": "2026-11-07 11:45:58",
+      "student_name": "Kavya Nair",
+      "student_email": "kavya.nair@student.edu",
+      "roll_number": "22EC1089",
+      "department": "Electronics & Communication",
+      "cgpa": "9.20",
+      "job_title": "Cloud DevOps & Site Reliability Engineer",
+      "company_name": "NexusCloud Technologies"
+    }
+  ],
+  "job1Applicants": {
+    "job_title": "Associate Full Stack Software Engineer",
+    "total_applicants": 2,
+    "applicants": [
+      {
+        "id": 1,
+        "job_id": 1,
+        "student_id": 5,
+        "status": "SHORTLISTED",
+        "cover_letter": "I have built multiple production-grade web applications using React and Node.js. Excited for NexusCloud!",
+        "applied_at": "2026-11-01 10:15:00",
+        "updated_at": "2026-11-07 11:45:58",
+        "student_name": "Rohit Verma",
+        "student_email": "rohit.verma@student.edu",
+        "roll_number": "22CS1045",
+        "degree": "B.Tech",
+        "department": "Computer Science & Engineering",
+        "cgpa": "8.75",
+        "active_backlogs": 0,
+        "graduation_year": 2026,
+        "student_phone": "+91 91234 56780",
+        "resume_url": "https://drive.google.com/demo/rohit-resume.pdf",
+        "interview_id": 1,
+        "interview_time": "2026-11-15 14:00:00",
+        "interview_status": "SCHEDULED",
+        "skills": [
+          {
+            "skill_name": "JavaScript",
+            "proficiency": "ADVANCED"
+          },
+          {
+            "skill_name": "React",
+            "proficiency": "ADVANCED"
+          },
+          {
+            "skill_name": "Node.js",
+            "proficiency": "INTERMEDIATE"
+          },
+          {
+            "skill_name": "Express.js",
+            "proficiency": "INTERMEDIATE"
+          },
+          {
+            "skill_name": "MySQL",
+            "proficiency": "INTERMEDIATE"
+          },
+          {
+            "skill_name": "Tailwind CSS",
+            "proficiency": "ADVANCED"
+          }
+        ]
+      },
+      {
+        "id": 30002,
+        "job_id": 1,
+        "student_id": 30002,
+        "status": "APPLIED",
+        "cover_letter": "hi,this is satya",
+        "applied_at": "2026-11-07 12:17:59",
+        "updated_at": "2026-11-07 12:17:59",
+        "student_name": "satya",
+        "student_email": "toyeso4513@betzenn.com",
+        "roll_number": "22a21",
+        "degree": "B.Tech",
+        "department": "Computer Science & Engineering",
+        "cgpa": "8.49",
+        "active_backlogs": 0,
+        "graduation_year": 2026,
+        "student_phone": "",
+        "resume_url": "",
+        "interview_id": null,
+        "interview_time": null,
+        "interview_status": null,
+        "skills": [
+          {
+            "skill_name": "JavaScript",
+            "proficiency": "INTERMEDIATE"
+          },
+          {
+            "skill_name": "MySQL",
+            "proficiency": "INTERMEDIATE"
+          },
+          {
+            "skill_name": "node.js",
+            "proficiency": "INTERMEDIATE"
+          },
+          {
+            "skill_name": "docker",
+            "proficiency": "INTERMEDIATE"
+          },
+          {
+            "skill_name": "react.js",
+            "proficiency": "INTERMEDIATE"
+          },
+          {
+            "skill_name": "taiwindcss",
+            "proficiency": "INTERMEDIATE"
+          },
+          {
+            "skill_name": "python",
+            "proficiency": "INTERMEDIATE"
+          }
+        ]
+      }
+    ]
+  },
+  "testJob30002": {
+    "id": 30002,
+    "company_id": 30002,
+    "recruiter_id": 30003,
+    "title": "gundu",
+    "description": "hi,sfdsf",
+    "job_type": "FULL_TIME",
+    "location": "Bengaluru, India",
+    "salary_range": "₹10,00,000 - ₹14,00,000 PA",
+    "min_cgpa": "7.00",
+    "max_backlogs": 0,
+    "eligible_graduation_year": 2026,
+    "eligible_degrees": "B.Tech,M.Tech,MCA",
+    "eligible_departments": "Computer Science & Engineering,Information Technology",
+    "required_skills": "React,Node.js,MySQL",
+    "deadline": "2026-12-31",
+    "is_active": 1,
+    "created_at": "2026-11-07 12:20:54",
+    "updated_at": "2026-11-07 12:20:54",
+    "company_name": "suridu",
+    "company_website": null,
+    "company_location": "Bengaluru, India",
+    "company_industry": "Technology & Software",
+    "company_description": null,
+    "company_logo": null,
+    "recruiter_name": "satya",
+    "recruiter_email": "toyeso4513@betzen.com",
+    "applicant_count": 0,
+    "user_application": null
+  }
+}
