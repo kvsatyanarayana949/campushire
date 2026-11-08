@@ -23,7 +23,7 @@ Write-Host "T0 (First Request Sent): $($t0Local.ToString('yyyy-MM-dd HH:mm:ss.ff
 $reqId1 = "req_health_" + [Guid]::NewGuid().ToString("N").Substring(0, 6)
 Write-Host "--> Sending first request to /api/health ($reqId1)..." -ForegroundColor White
 $swHealth = [System.Diagnostics.Stopwatch]::StartNew()
-$healthOutput = & curl.exe -s -w "%{http_code}|%{time_total}" -H "X-Benchmark-Run-Id: $benchmarkRunId" -H "X-Request-Id: $reqId1" --max-time 120 "$backendUrl/api/health"
+$healthOutput = & curl.exe -s -w "`n__CURL_META__%{http_code}|%{time_total}" -H "X-Benchmark-Run-Id: $benchmarkRunId" -H "X-Request-Id: $reqId1" --max-time 120 "$backendUrl/api/health"
 $swHealth.Stop()
 $tHealth = [DateTime]::UtcNow
 $tHealthLocal = [DateTime]::Now
@@ -31,14 +31,10 @@ $tHealthLocal = [DateTime]::Now
 $healthStatus = 0
 $healthTimeTotal = 0
 $healthJson = $null
-if ($healthOutput.Length -ge 7) {
-    $meta = $healthOutput.Substring($healthOutput.Length - 7)
-    $body = $healthOutput.Substring(0, $healthOutput.Length - 7)
-    $parts = $meta.Split("|")
-    if ($parts.Length -eq 2) {
-        $healthStatus = [int]$parts[0]
-        $healthTimeTotal = [double]$parts[1]
-    }
+if ($healthOutput -match "__CURL_META__(\d+)\|([\d\.]+)") {
+    $healthStatus = [int]$Matches[1]
+    $healthTimeTotal = [double]$Matches[2]
+    $body = ($healthOutput -split "`n__CURL_META__")[0]
     try { $healthJson = $body | ConvertFrom-Json } catch {}
 }
 
@@ -48,7 +44,7 @@ Write-Host "<-- /api/health returned HTTP $healthStatus in $([math]::Round($swHe
 $reqId2 = "req_ready_" + [Guid]::NewGuid().ToString("N").Substring(0, 6)
 Write-Host "--> Verifying database readiness at /api/health/ready ($reqId2)..." -ForegroundColor White
 $swReady = [System.Diagnostics.Stopwatch]::StartNew()
-$readyOutput = & curl.exe -s -w "%{http_code}|%{time_total}" -H "X-Benchmark-Run-Id: $benchmarkRunId" -H "X-Request-Id: $reqId2" --max-time 30 "$backendUrl/api/health/ready"
+$readyOutput = & curl.exe -s -w "`n__CURL_META__%{http_code}|%{time_total}" -H "X-Benchmark-Run-Id: $benchmarkRunId" -H "X-Request-Id: $reqId2" --max-time 30 "$backendUrl/api/health/ready"
 $swReady.Stop()
 $tReady = [DateTime]::UtcNow
 $tReadyLocal = [DateTime]::Now
@@ -56,14 +52,10 @@ $tReadyLocal = [DateTime]::Now
 $readyStatus = 0
 $readyTimeTotal = 0
 $readyJson = $null
-if ($readyOutput.Length -ge 7) {
-    $meta = $readyOutput.Substring($readyOutput.Length - 7)
-    $body = $readyOutput.Substring(0, $readyOutput.Length - 7)
-    $parts = $meta.Split("|")
-    if ($parts.Length -eq 2) {
-        $readyStatus = [int]$parts[0]
-        $readyTimeTotal = [double]$parts[1]
-    }
+if ($readyOutput -match "__CURL_META__(\d+)\|([\d\.]+)") {
+    $readyStatus = [int]$Matches[1]
+    $readyTimeTotal = [double]$Matches[2]
+    $body = ($readyOutput -split "`n__CURL_META__")[0]
     try { $readyJson = $body | ConvertFrom-Json } catch {}
 }
 
@@ -73,7 +65,7 @@ Write-Host "<-- /api/health/ready returned HTTP $readyStatus in $([math]::Round(
 $reqId3 = "req_jobs_" + [Guid]::NewGuid().ToString("N").Substring(0, 6)
 Write-Host "--> Requesting public openings at /api/jobs ($reqId3)..." -ForegroundColor White
 $swJobs = [System.Diagnostics.Stopwatch]::StartNew()
-$jobsOutput = & curl.exe -s -w "%{http_code}|%{time_total}" -H "X-Benchmark-Run-Id: $benchmarkRunId" -H "X-Request-Id: $reqId3" --max-time 30 "$backendUrl/api/jobs"
+$jobsOutput = & curl.exe -s -w "`n__CURL_META__%{http_code}|%{time_total}" -H "X-Benchmark-Run-Id: $benchmarkRunId" -H "X-Request-Id: $reqId3" --max-time 30 "$backendUrl/api/jobs"
 $swJobs.Stop()
 $tJobs = [DateTime]::UtcNow
 $tJobsLocal = [DateTime]::Now
@@ -82,14 +74,10 @@ $jobsStatus = 0
 $jobsTimeTotal = 0
 $jobsJson = $null
 $jobCount = 0
-if ($jobsOutput.Length -ge 7) {
-    $meta = $jobsOutput.Substring($jobsOutput.Length - 7)
-    $body = $jobsOutput.Substring(0, $jobsOutput.Length - 7)
-    $parts = $meta.Split("|")
-    if ($parts.Length -eq 2) {
-        $jobsStatus = [int]$parts[0]
-        $jobsTimeTotal = [double]$parts[1]
-    }
+if ($jobsOutput -match "__CURL_META__(\d+)\|([\d\.]+)") {
+    $jobsStatus = [int]$Matches[1]
+    $jobsTimeTotal = [double]$Matches[2]
+    $body = ($jobsOutput -split "`n__CURL_META__")[0]
     try {
         $jobsJson = $body | ConvertFrom-Json
         if ($jobsJson.data) { $jobCount = $jobsJson.data.Count }
