@@ -109,6 +109,28 @@ const AdminDashboard = () => {
     color: statusColors[s.status] || '#64748b',
   }));
 
+  // Custom standalone tooltip for charts - applies cleanly only to hovered bar without obscuring layout
+  const CustomBarTooltip = ({ active, payload, label }) => {
+    if (!active || !payload || !payload.length) return null;
+    const dataPoint = payload[0];
+    const color = dataPoint.color || dataPoint.fill || dataPoint.payload?.color || '#0284c7';
+    return (
+      <div className="bg-slate-900/95 text-white text-xs px-3.5 py-2.5 rounded-xl shadow-xl border border-slate-700/80 backdrop-blur-md pointer-events-none z-50">
+        <p className="font-semibold text-slate-200 mb-1 text-[11px]">
+          {label || dataPoint.payload?.name || dataPoint.name}
+        </p>
+        <div className="flex items-center space-x-2">
+          <span
+            className="w-2.5 h-2.5 rounded-xs shrink-0"
+            style={{ backgroundColor: color }}
+          />
+          <span className="text-slate-300 font-medium">{dataPoint.name}:</span>
+          <span className="font-bold text-white ml-auto">{dataPoint.value}</span>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-8">
       {/* Header Banner */}
@@ -210,9 +232,9 @@ const AdminDashboard = () => {
               <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-15} textAnchor="end" />
                 <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Bar dataKey="enrolled" fill="#e2e8f0" name="Enrolled Students" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="placed" fill="#0284c7" name="Offers Extended" radius={[4, 4, 0, 0]} />
+                <Tooltip cursor={false} shared={false} content={<CustomBarTooltip />} />
+                <Bar dataKey="enrolled" fill="#e2e8f0" name="Enrolled Students" radius={[4, 4, 0, 0]} activeBar={{ fill: '#cbd5e1' }} />
+                <Bar dataKey="placed" fill="#0284c7" name="Offers Extended" radius={[4, 4, 0, 0]} activeBar={{ fill: '#0369a1' }} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -233,8 +255,8 @@ const AdminDashboard = () => {
               <BarChart data={statusChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Bar dataKey="count" radius={[6, 6, 0, 0]}>
+                <Tooltip cursor={false} shared={false} content={<CustomBarTooltip />} />
+                <Bar dataKey="count" name="Candidates" radius={[6, 6, 0, 0]} activeBar={{ opacity: 0.82 }}>
                   {statusChartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}

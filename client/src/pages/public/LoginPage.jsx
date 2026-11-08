@@ -143,7 +143,7 @@ const LoginPage = () => {
               >
                 <div>
                   <span className="font-semibold text-slate-800 block">Student: Rohit Verma</span>
-                  <span className="text-[10px] text-slate-500">CGPA 8.75 • Computer Science • 2026 Batch</span>
+                  <span className="text-[10px] text-slate-500">rohit.verma@student.edu • Student Portal • Batch 2026</span>
                 </div>
                 <span className="text-[10px] font-bold text-brand-600 uppercase">Fill</span>
               </button>
@@ -155,7 +155,7 @@ const LoginPage = () => {
               >
                 <div>
                   <span className="font-semibold text-slate-800 block">Recruiter: Priya Sharma</span>
-                  <span className="text-[10px] text-slate-500">NexusCloud Technologies • Talent Acquisition</span>
+                  <span className="text-[10px] text-slate-500">priya.sharma@nexuscloud.com • NexusCloud Technologies</span>
                 </div>
                 <span className="text-[10px] font-bold text-indigo-600 uppercase">Fill</span>
               </button>
@@ -166,8 +166,8 @@ const LoginPage = () => {
                 className="w-full text-left p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-purple-50 hover:border-purple-200 transition text-xs flex items-center justify-between"
               >
                 <div>
-                  <span className="font-semibold text-slate-800 block">Administrator: System Admin</span>
-                  <span className="text-[10px] text-slate-500">Campus Placement Cell Director • Full Access</span>
+                  <span className="font-semibold text-slate-800 block">Administrator: System Administrator</span>
+                  <span className="text-[10px] text-slate-500">admin@campushire.io • Institutional Placement Console</span>
                 </div>
                 <span className="text-[10px] font-bold text-purple-600 uppercase">Fill</span>
               </button>

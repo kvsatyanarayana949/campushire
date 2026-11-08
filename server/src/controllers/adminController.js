@@ -136,18 +136,26 @@ const listUsers = async (req, res, next) => {
 const toggleUserStatus = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const targetId = parseInt(id, 10);
 
-    if (parseInt(id, 10) === req.user.id) {
+    if (targetId === req.user.id) {
       return errorResponse(res, 'You cannot deactivate your own administrative account.', 400);
     }
 
-    const [users] = await pool.query('SELECT id, name, is_active FROM users WHERE id = ?', [id]);
+    const [users] = await pool.query('SELECT id, name, email, is_active FROM users WHERE id = ?', [targetId]);
     if (users.length === 0) {
       return errorResponse(res, 'User not found.', 404);
     }
 
+    // Safety guard: Protect core demonstration accounts from deactivation
+    const protectedIds = [1, 2, 5];
+    const protectedEmails = ['rohit.verma@student.edu', 'priya.sharma@nexuscloud.com', 'admin@campushire.io'];
+    if (protectedIds.includes(targetId) || protectedEmails.includes(users[0].email)) {
+      return errorResponse(res, 'Core demonstration accounts cannot be deactivated to ensure uninterrupted evaluation.', 403);
+    }
+
     const newStatus = !users[0].is_active;
-    await pool.query('UPDATE users SET is_active = ? WHERE id = ?', [newStatus, id]);
+    await pool.query('UPDATE users SET is_active = ? WHERE id = ?', [newStatus, targetId]);
 
     return successResponse(
       res,
@@ -286,7 +294,7 @@ const changeAdminPassword = async (req, res, next) => {
 
     // 1. Exclusive row-level lock (FOR UPDATE) to prevent concurrent race conditions
     const [users] = await connection.query(
-      'SELECT id, password, role, token_version FROM users WHERE id = ? AND role = ? FOR UPDATE',
+      'SELECT id, email, password, role, token_version FROM users WHERE id = ? AND role = ? FOR UPDATE',
       [adminUserId, 'ADMIN']
     );
 
@@ -296,6 +304,12 @@ const changeAdminPassword = async (req, res, next) => {
     }
 
     const admin = users[0];
+
+    // Safety guard: Restrict credential modification on the public demonstration admin account
+    if (adminUserId === 1 || admin.email === 'admin@campushire.io') {
+      await connection.rollback();
+      return errorResponse(res, 'Modifying credentials for the public demonstration administrator account is restricted to preserve demo availability.', 403);
+    }
 
     // 2. Verify current password using bcrypt against the locked, up-to-date row
     const isMatch = await bcrypt.compare(currentPassword, admin.password);

@@ -209,16 +209,7 @@ const login = async (req, res, next) => {
       return errorResponse(res, 'Your account has been deactivated. Contact placement administrator.', 403);
     }
 
-    let isMatch = await bcrypt.compare(cleanPassword, user.password);
-
-    // Self-healing demo account recovery: If the password hash in the database was modified or out-of-sync,
-    // and the valid demo credentials ('Password@123') are submitted for an approved demo account, heal the hash.
-    const isApprovedDemoAccount = ['rohit.verma@student.edu', 'priya.sharma@nexuscloud.com', 'admin@campushire.io'].includes(normalizedEmail);
-    if (!isMatch && cleanPassword === 'Password@123' && isApprovedDemoAccount) {
-      const freshHash = await bcrypt.hash('Password@123', 10);
-      await pool.query('UPDATE users SET password = ?, is_active = TRUE WHERE id = ?', [freshHash, user.id]);
-      isMatch = true;
-    }
+    const isMatch = await bcrypt.compare(cleanPassword, user.password);
 
     if (!isMatch) {
       return errorResponse(res, 'Invalid email or password.', 401);

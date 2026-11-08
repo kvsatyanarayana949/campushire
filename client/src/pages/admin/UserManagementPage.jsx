@@ -180,6 +180,10 @@ const UserManagementPage = () => {
                       <td className="py-3.5 px-6 text-right">
                         {isCurrent ? (
                           <span className="text-[11px] text-slate-400 italic">Current Session</span>
+                        ) : [1, 2, 5].includes(u.id) || ['rohit.verma@student.edu', 'priya.sharma@nexuscloud.com', 'admin@campushire.io'].includes(u.email) ? (
+                          <span className="inline-block px-2.5 py-1 text-[10px] font-bold text-slate-500 bg-slate-100 rounded-lg border border-slate-200">
+                            Protected Demo
+                          </span>
                         ) : (
                           <button
                             onClick={() => setTargetUser(u)}
