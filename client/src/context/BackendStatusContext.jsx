@@ -46,22 +46,37 @@ export const BackendStatusProvider = ({ children }) => {
     // Initial probe on application entry
     checkReadiness();
 
-    // Schedule periodic polling:
-    // If not ready: retry 5s after attempt completes so container wakeup is caught quickly.
-    // Once ready: check at lower frequency (every 30 seconds).
-    const scheduleNext = () => {
-      const delay = isReady ? 30000 : 5000;
+    // If not ready: retry 5s after attempt completes to detect container wakeup.
+    // Once ready: STOP polling! Do NOT send continuous requests that prevent Render Free from sleeping.
+    if (!isReady) {
       if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(async () => {
-        await checkReadiness();
-        scheduleNext();
-      }, delay);
+      timerRef.current = setTimeout(() => {
+        checkReadiness();
+      }, 5000);
+    }
+
+    // Pause all checks when user minimizes or switches tabs
+    const handleVisibility = () => {
+      if (document.hidden) {
+        if (timerRef.current) clearTimeout(timerRef.current);
+      } else if (!isReady) {
+        checkReadiness();
+      }
     };
 
-    scheduleNext();
+    // React to API errors without needing continuous polling
+    const handleServiceUnavailable = () => {
+      setIsReady(false);
+      checkReadiness();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('backend-unavailable', handleServiceUnavailable);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('backend-unavailable', handleServiceUnavailable);
     };
   }, [checkReadiness, isReady]);
 

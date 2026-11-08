@@ -120,7 +120,10 @@ const listJobs = async (req, res, next) => {
         application_status: appMap[j.id] || null
       }));
 
-      if (!hasRecordedFirstJobs) {
+      const benchmarkRunId = req.headers['x-benchmark-run-id'] || req.query?.benchmark_run_id;
+      if (benchmarkRunId) {
+        recordEvent('BENCHMARK_JOBS_RESPONSE', 'SUCCESS', `Run: ${benchmarkRunId} | Returned ${jobs.length} jobs in ${Date.now() - reqStart}ms`);
+      } else if (!hasRecordedFirstJobs) {
         hasRecordedFirstJobs = true;
         recordEvent('FIRST_JOBS_API_RESPONSE', 'SUCCESS', `Returned ${jobs.length} jobs (total: ${total}) in ${Date.now() - reqStart}ms`);
       }
@@ -133,7 +136,10 @@ const listJobs = async (req, res, next) => {
       });
     }
 
-    if (!hasRecordedFirstJobs) {
+    const benchmarkRunId = req.headers['x-benchmark-run-id'] || req.query?.benchmark_run_id;
+    if (benchmarkRunId) {
+      recordEvent('BENCHMARK_JOBS_RESPONSE', 'SUCCESS', `Run: ${benchmarkRunId} | Returned ${jobs.length} jobs in ${Date.now() - reqStart}ms`);
+    } else if (!hasRecordedFirstJobs) {
       hasRecordedFirstJobs = true;
       recordEvent('FIRST_JOBS_API_RESPONSE', 'SUCCESS', `Returned ${jobs.length} jobs (total: ${total}) in ${Date.now() - reqStart}ms`);
     }

@@ -20,7 +20,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Handle Global 401 Unauthorized
+// Response Interceptor: Handle Global 401 Unauthorized & Service Unavailability
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -31,6 +31,11 @@ api.interceptors.response.use(
         localStorage.removeItem('campushire_token');
         localStorage.removeItem('campushire_user');
         window.location.href = '/login?session_expired=true';
+      }
+    } else if (!error.response || error.response.status === 503) {
+      // Notify BackendStatusContext reactively without requiring periodic polling
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('backend-unavailable'));
       }
     }
     return Promise.reject(error);

@@ -13,7 +13,7 @@ getJwtSecret();
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 const checkDbReady = require('./middleware/checkDbReady');
 const { isDbReady, getDbState, getDbDetails } = require('./config/dbState');
-const { recordEvent, getDiagnostics } = require('./utils/startupDiagnostics');
+const { recordEvent, recordInboundRequest, getDiagnostics, instanceId, processStartTime } = require('./utils/startupDiagnostics');
 
 // Route Imports
 const authRoutes = require('./routes/authRoutes');
@@ -58,6 +58,12 @@ if (process.env.NODE_ENV !== 'test') {
 // Body Parsing
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+
+// Inbound Request Telemetry for Cold-Start & Inactivity Verification
+app.use((req, res, next) => {
+  recordInboundRequest(req);
+  next();
+});
 
 // Global Request Timeout Guard (25s) to prevent stalled connections
 app.use((req, res, next) => {
@@ -112,6 +118,9 @@ app.get('/api/health', async (req, res) => {
   const responseData = {
     status: 'UP',
     service: 'CampusHire API Backend',
+    instanceId: diagnostics.instanceId,
+    pid: diagnostics.pid,
+    processStartTime: diagnostics.processStartTime,
     database: dbState,
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
@@ -164,10 +173,14 @@ app.get('/api/health/diagnostics', (req, res) => {
 // 2. Dedicated Database Readiness Endpoint
 app.get('/api/health/ready', (req, res) => {
   const dbDetails = getDbDetails();
+  const diagnostics = getDiagnostics();
   if (isDbReady()) {
     return res.status(200).json({
       status: 'READY',
       service: 'CampusHire API Backend',
+      instanceId: diagnostics.instanceId,
+      pid: diagnostics.pid,
+      processStartTime: diagnostics.processStartTime,
       database: 'READY',
       timestamp: new Date().toISOString(),
       uptime: process.uptime()
@@ -177,6 +190,9 @@ app.get('/api/health/ready', (req, res) => {
   return res.status(503).json({
     status: 'NOT_READY',
     service: 'CampusHire API Backend',
+    instanceId: diagnostics.instanceId,
+    pid: diagnostics.pid,
+    processStartTime: diagnostics.processStartTime,
     database: dbDetails.state,
     lastError: dbDetails.lastError,
     message: 'Database is warming up or undergoing automated schema verification. Please retry in a few moments.',
